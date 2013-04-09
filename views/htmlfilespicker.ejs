@@ -1,0 +1,13 @@
+<% if(everyauth.loggedIn) {%>
+
+  <button id="savecode" class="btn disabled" style="position:absolute;right:-28px;bottom:0;" type="button">Save</button>
+
+  <!-- Html Files List -->
+  <div style="position:absolute;right:50px;bottom:0;">
+    <div class="btn-group">
+      <a class="btn  dropdown-toggle disabled" data-toggle="dropdown" href="#" id ="htmlToggleButton">Choose an html file! <span class="caret" style="margin-top: 8px;"></span></a>
+      <ul style="z-index:2;" class="dropdown-menu" id="htmlList"></ul>
+    </div>
+  </div>
+
+<% } %>

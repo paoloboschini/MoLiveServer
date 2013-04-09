@@ -1,0 +1,18 @@
+<!-- picture github -->
+<img style="float:left; margin-right:10px;" src="/img/github-white.png" width="50px" height="50px">
+
+<ul style="float:left;list-style-type:none; margin:0px 10px 0px 0px;">
+
+  <!-- username -->
+  <li><p id="git-user"><%= everyauth.github.user.login %></p></li>
+
+  <!-- gist picker -->
+  <li style="margin-top:-5px;">
+    <div class="btn-group" style="z-index:20">
+      <a class="btn  dropdown-toggle" data-toggle="dropdown" href="#" id="gistsToggleButton">Choose a gist! <span class="caret" style="margin-top: 8px;"></span>
+      </a>
+      <ul class="dropdown-menu" id="gistsList"></ul>
+    </div>
+  </li>
+
+</ul>
