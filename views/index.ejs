@@ -39,20 +39,20 @@
 
   <div id="header">
 
-    <div style="position:absolute;width:50%;height:55px;left:0;border:0px solid green;z-index:10;">
-      <% include htmlfilespicker %>
+    <div id="one"   style="background-color:#555;width:33%;height:100%;float:left;">
+      
     </div>
 
-    <div style="position:absolute;width:50%;height:55px;right:0;border:0px solid red;z-index:10;">
-      <% include jsfilespicker %>
+    <div id="two"   style="background-color:#999;width:34%;height:100%;float:left;">
+      <div style="border:0px solid white;background-color:#555;width:300px;height:100%;margin:0 auto;">
+        
+      </div>
     </div>
 
-    <% if(everyauth.loggedIn) {%>
-      <% include gituser %>
-    <% } %>
-    
-    <% include execute %>
-    <% include authentication %>
+    <div id="three" style="background-color:#ddd;width:33%;height:100%;float:left;">
+      
+    </div>
+
 
 
     <!-- Arrows -->
