@@ -14,6 +14,8 @@ var currentSelectedGistId;
 var everyauth = require('everyauth');
 everyauth.debug = true;
 
+console.log(Object.keys(everyauth.github));
+
 everyauth.github
   .appId('e354d175ec5d528e1221')
   .appSecret('c0395c056ba48ab496689aaf4a60d4196a870dc9')
@@ -133,45 +135,53 @@ app.post('/', express.bodyParser(), function(req, res){
 });
 
 app.post('/gist', express.bodyParser(), function(req, res){
-    // var id = req.body.id;
-    currentSelectedGistId = req.body.id;
+  // var id = req.body.id;
+  currentSelectedGistId = req.body.id;
 
-    github.gists.get({
-        id: currentSelectedGistId
-    }, function(err, data) {
-        var files = data.files;
-        var htmlFiles = [];
-        var jsFiles = [];
+  github.gists.get({
+    id: currentSelectedGistId
+  }, function(err, data) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    var files = data.files;
+    var htmlFiles = [];
+    var jsFiles = [];
 
-        for (var key in files) {
-          if (files.hasOwnProperty(key)) {
-            var filename = (files[key]).filename;
-            var content = (files[key]).content;
-            var type = filename.match(/.*\.(.*)/)[1];
-            if (type == 'html') {
-              htmlFiles.push({id:currentSelectedGistId, filename:filename});
-            }
-            if (type == 'js') {
-              jsFiles.push({id:currentSelectedGistId, filename:filename});
-            }
-          }
+    for (var key in files) {
+      if (files.hasOwnProperty(key)) {
+        var filename = (files[key]).filename;
+        var content = (files[key]).content;
+        var type = filename.match(/.*\.(.*)/)[1];
+        if (type == 'html') {
+          htmlFiles.push({id:currentSelectedGistId, filename:filename});
         }
+        if (type == 'js') {
+          jsFiles.push({id:currentSelectedGistId, filename:filename});
+        }
+      }
+    }
 
-        res.send({'htmlfiles' : htmlFiles, 'jsfiles' : jsFiles});
-    });
+    res.send({'htmlfiles' : htmlFiles, 'jsfiles' : jsFiles});
+  });
 });
 
 app.post('/file', express.bodyParser(), function(req, res){
-    var id = req.body.id;
-    var file = req.body.filename;
+  var id = req.body.id;
+  var file = req.body.filename;
 
-    github.gists.get({
-        id: id
-    }, function(err, data) {
-        var files = data.files;
-        var content = (files[file]).content;
-        res.send(content);
-    });
+  github.gists.get({
+    id: id
+  }, function(err, data) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    var files = data.files;
+    var content = (files[file]).content;
+    res.send(content);
+  });
 });
 
 app.get('/mobile', function(req, res){

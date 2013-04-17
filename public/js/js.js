@@ -76,26 +76,21 @@
     if (user.length !== 0) {
       console.log(user + " is logged in.");
 
-      var widthButton = $('#gistsToggleButton').width();
-      var wDiv = $('#git-user').width();
-      // var hDiv = $('.git-div').height();
-      $('#git-user').css('background', 'rgb(0,59,128) url("/img/ajax-loader.gif") no-repeat '+(wDiv-30)+'px 5px');
+      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
 
       $.ajax({
         url: "/",
         type: "POST",
         data: {user : user},
         cache: false,
-        timeout: 5000,
+        timeout: 10000,
         success: function (response) {
-          $('#git-user').css('background', 'rgb(0,59,128)');
+          $('#loadIndicator').css('background', '#003B80');
           // 
           // if (response.error) {
           //   alert(response.error);
           //   return;
           // }
-          // 
-          // $("#gistspickercontainer").css("display", "block");
           $.each(response, function (index, value) {
             $('#gistsList').append('<li><a class="gistElement" href="' + value.id + '">' + value.description + '</a></li>');
           });
@@ -131,24 +126,23 @@
         .append('<span class="caret" style="margin-top: 8px;"></span>')
         .addClass("disabled");
 
-      $('#gistsToggleButton')
+      $('#gistsToggleLink')
         .text($(this).text()+' ')
         .append('<span class="caret" style="margin-top: 8px;"></span>')
         .addClass("btn-success");
 
-      var widthButton = $('#gistsToggleButton').width();
-      $('#formcontainer').css('background', '#fff url("/img/LoadWaitTransparent.gif") no-repeat '+(widthButton+55)+'px 106px');
-
       var id = $(this).attr('href');
 
-      $('#git-user').css('background', 'rgb(0,59,128) url("/img/ajax-loader.gif") no-repeat '+(wDiv-30)+'px 5px');
+      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+
       $.ajax({
         url: "/gist",
         type: "POST",
         data: {id:id},
+        timeout: 10000,
         cache: false,
         success: function (response) {
-          $('#git-user').css('background', 'rgb(0,59,128)');
+          $('#loadIndicator').css('background', '#003B80');
 
           if (response.htmlfiles.length > 0) {
             $("#htmlArrow").show("slide", { direction: "up", easing: "easeOutExpo"}, 1000);
@@ -180,20 +174,23 @@
       e.preventDefault();
       var filename = $(this).text();
       var id = $(this).attr('href');
-        $.ajax({
-          url: "/file",
-          type: "POST",
-          data: {id:id, filename:filename},
-          cache: false,
-          success: function (response) {
-            $('#htmlToggleButton')
-              .text(filename+' ')
-              .append('<span class="caret" style="margin-top: 8px;"></span>');
-            $('#savecode').removeClass("disabled").removeClass('btn-info');
-            htmlCodeMirror.setValue(response);
-            // socket.emit('code', response);
-          }
-        }); // ajax
+      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      $.ajax({
+        url: "/file",
+        type: "POST",
+        data: {id:id, filename:filename},
+        timeout: 10000,
+        cache: false,
+        success: function (response) {
+          $('#loadIndicator').css('background', '#003B80');
+          $('#htmlToggleButton')
+            .text(filename+' ')
+            .append('<span class="caret" style="margin-top: 8px;"></span>');
+          $('#savecode').removeClass("disabled").removeClass('btn-info');
+          htmlCodeMirror.setValue(response);
+          // socket.emit('code', response);
+        }
+      }); // ajax
     });
 
     // when choosing a javascript file, download it and show the content
@@ -201,20 +198,23 @@
       e.preventDefault();
       var filename = $(this).text();
       var id = $(this).attr('href');
-        $.ajax({
-          url: "/file",
-          type: "POST",
-          data: {id:id, filename:filename},
-          cache: false,
-          success: function (response) {
-            $('#jsToggleButton')
-              .text(filename+' ')
-              .append('<span class="caret" style="margin-top: 8px;"></span>');
-            $('#savecode').removeClass("disabled").removeClass('btn-info');
-            jsCodeMirror.setValue(response);
-            // socket.emit('code', response);
-          }
-        }); // ajax
+      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      $.ajax({
+        url: "/file",
+        type: "POST",
+        data: {id:id, filename:filename},
+        cache: false,
+        timeout: 10000,
+        success: function (response) {
+          $('#loadIndicator').css('background', '#003B80');
+          $('#jsToggleButton')
+            .text(filename+' ')
+            .append('<span class="caret" style="margin-top: 8px;"></span>');
+          $('#savecode').removeClass("disabled").removeClass('btn-info');
+          jsCodeMirror.setValue(response);
+          // socket.emit('code', response);
+        }
+      }); // ajax
     });
 
     // working send message
@@ -241,6 +241,29 @@
       $('#savecode').removeClass('btn-info');
     });
 
+    $('#toggleHtmlArea,#toggleJSArea').click(function(e) {
+      var htmlActive, jsActive;
+      if ($(this).attr('id') == 'toggleHtmlArea') {
+        htmlActive = !$(this).hasClass('active');
+        jsActive = $('#toggleJSArea').hasClass('active');
+      } else {
+        htmlActive = $('#toggleHtmlArea').hasClass('active');
+        jsActive = !$(this).hasClass('active');
+      }
+
+      $('#editors').css('display','block');
+      if (htmlActive && jsActive) $('#codeMirrorHtmlContainer,#codeMirrorJsContainer').css('display','block').css('width','50%');
+      if (!htmlActive && !jsActive) $('#editors').css('display','none');
+      if (htmlActive && !jsActive) {
+        $('#codeMirrorHtmlContainer').css('display','block').css('width','100%');
+        $('#codeMirrorJsContainer').css('display','none');
+      }
+      if (!htmlActive && jsActive) {
+        $('#codeMirrorHtmlContainer').css('display','none');
+        $('#codeMirrorJsContainer').css('display','block').css('width','100%');
+      }
+    });
+
     /* Tangle for the delay
         var rootElement = document.getElementById("delayLabel");
         var model = {
@@ -254,8 +277,6 @@
         var tangle = new Tangle(rootElement, model);
         */
 
-    $("#htmlArrow").hide();
-    $("#jsArrow").hide();
 
   }); // on load of page
 })();
