@@ -79,7 +79,7 @@
       $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
 
       $.ajax({
-        url: "/",
+        url: "/user",
         type: "POST",
         data: {user : user},
         cache: false,
