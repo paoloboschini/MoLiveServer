@@ -2,13 +2,15 @@
 
   var socket = io.connect();
 
-  // on connection to server
-  socket.on('connect', function () {
-    // tell the server I want to be in the mobile room
+  // On connection to server
+  socket.on('connect', function() {
+    // Tell the server I want to be in the mobile room
     socket.emit('room', 'mobile');
   });
 
-  // on load of page
+  /**
+   * On load of page
+   */
   $(function() {
 
     // socket.on('restoreWebView', function (code) {
@@ -16,7 +18,7 @@
     //   mosync.bridge.send(["Custom", "restoreWebView"]);
     // });
 
-    socket.on('htmlCode', function (code) {
+    socket.on('html', function(code) {
       mosync.nativeui.destroyAll();
       mosync.bridge.send(["Custom", "restoreWebView"]);
 
@@ -25,7 +27,7 @@
       document.close();
     });
 
-    socket.on('jsCode', function (code) {
+    socket.on('javasript', function(code) {
       try {
         eval(code);
       } catch(e) {

@@ -5,6 +5,15 @@ body {
 }
 
 .CodeMirror {}
+.CodeMirror pre.CodeMirror-placeholder {
+  color: #999;
+}
+.CodeMirror-focused .cm-matchhighlight {
+  background: rgba(255, 0, 0, 0.5);
+}
+.CodeMirror-activeline-background {
+  background: rgba(100, 100, 100, 0.2) !important;
+}
 
 #header {
   background: #003B80;
@@ -14,7 +23,7 @@ body {
 
 #codeMirrorHtmlContainer {
   width:50%;
-  height:500px;
+  height:100%;
   float:left;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -23,7 +32,7 @@ body {
 
 #codeMirrorJsContainer {
   width:50%;
-  height:500px;
+  height:100%;
   float:left;
   border-left: 1px solid white;
   -webkit-box-sizing: border-box;
