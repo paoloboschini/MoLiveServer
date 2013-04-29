@@ -544,7 +544,11 @@
       {key: "width", values: []},
       {key: "height", values: []}
     ]},
-    {tag: 'wbr', attr: []}
+    {tag: 'wbr', attr: []},
+    {tag: 'gatto', attr: [
+      {key: "brumma", values: []},
+      {key: "miao", values: []}
+    ]}
   ];
 
   var globalAttributes = [

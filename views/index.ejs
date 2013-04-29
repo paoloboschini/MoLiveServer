@@ -3,138 +3,168 @@
 <head>
   <title><%= title %></title>
 
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+  <link rel='stylesheet' href='/css/jquery/smoothness/jquery-ui.css' />
+  <script src='/js/jquery/jquery-1.9.1.js'></script>
+  <script src='/js/jquery/jquery-ui.js'></script>
     
-  <script src="/socket.io/socket.io.js"></script>
+  <script src='/socket.io/socket.io.js'></script>
 
-  <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
-  <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
-  <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap.js"></script>
-  <link href="/FontAwesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href='/css/bootstrap/bootstrap.css' rel='stylesheet' type='text/css' />
+  <link href='/css/bootstrap/bootstrap-responsive.css' rel='stylesheet' type='text/css' />
+  <script src='/js/bootstrap.js'></script>
+  <link href='/FontAwesome/css/font-awesome.min.css' rel='stylesheet'>
 
-  <script src="/codemirror-3.12/lib/codemirror.js"></script>
-  <link rel="stylesheet" href="/codemirror-3.12/lib/codemirror.css">
-  <link rel="stylesheet" href="/codemirror-3.12/theme/erlang-dark.css">
-  <link rel="stylesheet" href="/codemirror-3.12/theme/lesser-dark.css">
+  <script src='/codemirror-3.12/lib/codemirror.js'></script>
+  <link rel='stylesheet' href='/codemirror-3.12/lib/codemirror.css'>
+  <link rel='stylesheet' href='/codemirror-3.12/theme/erlang-dark.css'>
+  <link rel='stylesheet' href='/codemirror-3.12/theme/lesser-dark.css'>
+  <link rel='stylesheet' href='/codemirror-3.12/theme/ambiance.css'>
 
-  <script src="/codemirror-3.12/addon/display/placeholder.js"></script>
-  <script src="/codemirror-3.12/addon/edit/matchbrackets.js"></script>
-  <script src="/codemirror-3.12/addon/edit/closetag.js"></script>
-  <script src="/codemirror-3.12/addon/edit/closebrackets.js"></script>
-  <script src="/codemirror-3.12/addon/search/match-highlighter.js"></script>
-  <script src="/codemirror-3.12/addon/selection/active-line.js"></script>
+  <script src='/codemirror-3.12/addon/display/placeholder.js'></script>
+  <script src='/codemirror-3.12/addon/edit/matchbrackets.js'></script>
+  <script src='/codemirror-3.12/addon/edit/closetag.js'></script>
+  <script src='/codemirror-3.12/addon/edit/closebrackets.js'></script>
+  <script src='/codemirror-3.12/addon/search/match-highlighter.js'></script>
+  <script src='/codemirror-3.12/addon/selection/active-line.js'></script>
 
-  <script src="/codemirror-3.12/addon/hint/show-hint.js"></script>
-  <link rel="stylesheet" href="/codemirror-3.12/addon/hint/show-hint.css">
-  <script src="/codemirror-3.12/addon/hint/javascript-hint.js"></script>
-  <script src="/codemirror-3.12/addon/hint/html-hint.js"></script>
+  <script src='/codemirror-3.12/addon/hint/show-hint.js'></script>
+  <link rel='stylesheet' href='/codemirror-3.12/addon/hint/show-hint.css'>
+  <script src='/codemirror-3.12/addon/hint/javascript-hint.js'></script>
+  <script src='/codemirror-3.12/addon/hint/html-hint.js'></script>
       
-  <script src="/codemirror-3.12/mode/htmlmixed/htmlmixed.js"></script>
-  <script src="/codemirror-3.12/mode/xml/xml.js"></script>
-  <script src="/codemirror-3.12/mode/javascript/javascript.js"></script>
-  <script src="/codemirror-3.12/mode/css/css.js"></script>
+  <script src='/codemirror-3.12/mode/htmlmixed/htmlmixed.js'></script>
+  <script src='/codemirror-3.12/mode/xml/xml.js'></script>
+  <script src='/codemirror-3.12/mode/javascript/javascript.js'></script>
+  <script src='/codemirror-3.12/mode/css/css.js'></script>
 
   <script src='/js/Tangle.js'></script>
-  <link rel="stylesheet" href="/css/TangleKit.css" type="text/css">
-  <script type="text/javascript" src="/js/TangleKit/mootools.js"></script>
-  <script type="text/javascript" src="/js/TangleKit/sprintf.js"></script>
-  <script type="text/javascript" src="/js/TangleKit/BVTouchable.js"></script>
-  <script type="text/javascript" src="/js/TangleKit/TangleKit.js"></script>
+  <link rel='stylesheet' href='/css/TangleKit.css' type='text/css'>
+  <script type='text/javascript' src='/js/TangleKit/mootools.js'></script>
+  <script type='text/javascript' src='/js/TangleKit/sprintf.js'></script>
+  <script type='text/javascript' src='/js/TangleKit/BVTouchable.js'></script>
+  <script type='text/javascript' src='/js/TangleKit/TangleKit.js'></script>
 
   <script src='/js/js.js'></script>
-  <link href="/css/style.css" rel="stylesheet" media="screen">
+  <link href='/css/style.css' rel='stylesheet' media='screen'>
 </head>
 
 <!-- We could have an expert mode without hints, and a novice mode with hints and explanation of the code and basic programming. -->
 <body>
 
-  <div id="header">
+  <div id='header'>
     
-    <p id="fileSaved" style="display:none;position:absolute;color:white;text-align:center;width:100%;left:0;top:5px;">The file was saved!</p>
+    <p id='fileSaved' style='display:none;position:absolute;color:white;text-align:center;width:100%;left:0;top:5px;'>File(s) saved!</p>
 
-    <div id="one" style="width:33%;height:100%;float:left;">
+    <div id='one' style='width:33%;height:100%;float:left;'>
       <% if(everyauth.loggedIn) {%>
         <% include gituser %>
       <% } %>
       <% include execute %>
     </div>
 
-    <div id="two" style="width:34%;height:100%;float:left;">
+    <div id='two' style='width:34%;height:100%;float:left;'>
       <% if(everyauth.loggedIn) {%>
-        <div id="twoleft" style="width:40%;height:100%;float:left;">
+        <div id='twoleft' style='width:40%;height:100%;float:left;'>
           <% include htmlfilespicker %>
         </div>
 
-        <div id="twoCenter" style="width:20%;height:100%;float:left;">
-          <div style="width:58px;margin:0 auto;margin-top:20px;">
-            <button id="savecode" class="btn disabled" type="button">Save</button>
+        <div id='twoCenter' style='width:20%;height:100%;float:left;'>
+          <div style='width:58px;margin:0 auto;margin-top:20px;'>
+            <button id='savecode' class='btn disabled' type='button'>Save</button>
           </div>
         </div>
 
-        <div id="twoRight" style="width:40%;height:100%;float:left;">
+        <div id='twoRight' style='width:40%;height:100%;float:left;'>
           <% include jsfilespicker %>
         </div>
       <% } %>
     </div>
 
-    <div id="three" style="width:33%;height:100%;float:left;">
+    <div id='three' style='width:33%;height:100%;float:left;'>
       <% include authentication %>
     </div>
   </div> <!-- header div -->
 
-  <div id="editors" style="height:500px;border:0px solid red;">
-    <div id="codeMirrorHtmlContainer">
-      <textarea id='cmHtml' placeholder="Code goes here..."></textarea>
+  <div id='editors' style='height:500px;border:0px solid red;'>
+    <div id='codeMirrorHtmlContainer'>
+      <textarea id='cmHtml' placeholder='Code goes here...
+
+You can start coding HTML in this area.
+Login to GitHub to get a list of you gists.
+If you want to save a file, either choose new file and star coding,
+or just start coding and save the code later.'></textarea>
     </div>
-    <div id="codeMirrorJsContainer">
-      <textarea id='cmJS' placeholder="Code goes here..."></textarea>
+    <div id='codeMirrorJsContainer'>
+      <textarea id='cmJS' placeholder='Code goes here...
+
+You can start coding JavaScript in this area.
+Login to GitHub to get a list of you gists.
+If you want to save a file, either choose new file and star coding,
+or just start coding and save the code later.'></textarea>
     </div>
   </div>
 
-  <div style="padding:5px;">
-    <div style="width:156px;margin:0 auto;">
-      <div class="btn-group" data-toggle="buttons-checkbox">
-        <button id="toggleHtmlArea" type="button" class="btn btn-primary active">HTML</button>
-        <button id="toggleJSArea" type="button" class="btn btn-primary active">JavaScript</button>
+  <div style='padding:5px;'>
+    <div style='width:156px;margin:0 auto;'>
+      <div class='btn-group' data-toggle='buttons-checkbox'>
+        <button id='toggleHtmlArea' type='button' class='btn btn-primary active'>HTML</button>
+        <button id='toggleJSArea' type='button' class='btn btn-primary active'>JavaScript</button>
       </div>
     </div>
   </div>
 
-  <!-- footer -->
+  <!-- Documentation -->
 
   <h1>HTML</h1>
-  <div style="width:50%;float:left;">
-    <div class="accordion" id="widgets">
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='widgets'>
       <% for(var i = 0; i < widgets.length/2; ++i) { %>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#widgets" href="#<%= widgets[i].name %>">
-            <%= widgets[i].name %>
-          </a>
-        </div>
-        <div id="<%= widgets[i].name %>" class="accordion-body collapse in">
-          <div class="accordion-inner">
-            <%= widgets[i].description %>
+        <% var widget = widgets[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#widgets' href='#<%= widget.name %>'>
+              <%= widget.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widget.description %></span>
+            </a>
+          </div>
+          <div id='<%= widget.name %>' class='accordion-body collapse in'>
+            <div class='accordion-inner' style='border:0px;'>
+              <% if(widget.hasOwnProperty('properties')) { %>
+                <ul>
+                <% for(var j = 0; j < widget.properties.length; ++j) { %>
+                  <li>
+                    <%= widget.properties[j][0] + ': ' + widget.properties[j][1]%>
+
+                    <% if(widget.properties[j][2]) { %>
+                      <br />Values:
+                      <ul>
+                        <% for(var k = 0; k < widget.properties[j][2].length; ++k) { %>
+                          <li><%= widget.properties[j][2][k] %></li>
+                        <% } %>
+                      </ul>
+                    <% } %>
+
+                  </li>
+                <% } %> <!-- for j -->
+                </ul>
+              <% } %> <!-- widget.hasOwnProperty -->
+            </div>
           </div>
         </div>
-      </div>
-      <% } %>
+      <% } %> <!-- for i -->
     </div> <!-- accordion -->
   </div> <!-- div widgets left -->
 
-  <div style="width:50%;float:left;">
-    <div class="accordion" id="widgets">
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='widgets'>
       <% for(var i = widgets.length/2; i < widgets.length; ++i) { %>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#widgets" href="#<%= widgets[i].name %>">
-            <%= widgets[i].name %>
+      <div class='accordion-group' style='margin:10px;'>
+        <div class='accordion-heading'>
+          <a class='accordion-toggle' data-toggle='collapse' data-parent='#widgets' href='#<%= widgets[i].name %>'>
+            <%= widgets[i].name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widgets[i].description %></span>
           </a>
         </div>
-        <div id="<%= widgets[i].name %>" class="accordion-body collapse in">
-          <div class="accordion-inner">
+        <div id='<%= widgets[i].name %>' class='accordion-body collapse in'>
+          <div class='accordion-inner'>
             <%= widgets[i].description %>
           </div>
         </div>
@@ -144,6 +174,71 @@
   </div> <!-- div widgets right -->
 
   <h1>JavaScript</h1>
+
+  <!-- Modal to save gist file -->
+  <!-- Button to trigger modal -->
+
+ 
+<!-- Both Modal -->
+<div id='bothModal' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+  <div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
+    <h3 id='myModalLabel'>New Files</h3>
+  </div>
+  <div class='modal-body'>
+    <div class='form-horizontal'>
+      <input type='text' placeholder='HTML filename' id='inputHtmlBoth'>
+      <input type='text' placeholder='JavaScript filename' id='inputJsBoth'>
+      <button id='bothModalSave' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Html Modal -->
+<div id='htmlModal' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='width:340px;margin-left:-170px;'>
+  <div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
+    <h3 id='myModalLabel'>New HTML File</h3>
+  </div>
+  <div class='modal-body'>
+    <div class='form-horizontal'>
+      <input type='text' placeholder='HTML filename' id='inputHtml'>
+      <button id='htmlModalSave' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript Modal -->
+<div id='jsModal' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='width:340px;margin-left:-170px;'>
+  <div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
+    <h3 id='myModalLabel'>New JavaScript File</h3>
+  </div>
+  <div class='modal-body'>
+    <div class='form-horizontal'>
+      <input type='text' placeholder='JavaScript filename' id='inputJs'>
+      <button id='jsModalSave' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Download Resource Modal -->
+<div id='downloadResourceModal' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+  <div class='modal-header'>
+    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
+    <h3 id='myModalLabel'>Download New Resource</h3>
+  </div>
+  <div class='modal-body'>
+    <div class='form-horizontal'>
+      <input type='text' placeholder='Insert url to resource' id='inputUrlResource'>
+      <input type='text' placeholder='Insert filename for the resource' id='inputFilenameResource'>
+      <button id='resourceModalSave' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Save</button>
+    </div>
+    <div style="margin-top:20px;">
+      OR <button id='resourceModalSaveFromFile' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Choose file...</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

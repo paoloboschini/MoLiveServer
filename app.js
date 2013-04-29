@@ -1,14 +1,14 @@
 // Init Express framework and Socket.io
-var express = require("express"),
+var express = require('express'),
     app = express(),
-    server = require("http").createServer(app),
-    io = require("socket.io").listen(server);
+    server = require('http').createServer(app),
+    io = require('socket.io').listen(server);
 server.listen(5678);
 
 // Init the GitHub Api, https://github.com/ajaxorg/node-github
-var GitHubApi = require("github");
+var GitHubApi = require('github');
 var github = new GitHubApi({
-    version: "3.0.0"
+    version: '3.0.0'
 });
 
 /**
@@ -20,19 +20,19 @@ var currentSelectedGistId;
 /**
  * Init everyauth.
  */
-var everyauth = require("everyauth");
+var everyauth = require('everyauth');
 everyauth.debug = true;
 
 everyauth.github
-  .appId("e354d175ec5d528e1221")
-  .appSecret("c0395c056ba48ab496689aaf4a60d4196a870dc9")
+  .appId('e354d175ec5d528e1221')
+  .appSecret('c0395c056ba48ab496689aaf4a60d4196a870dc9')
   .findOrCreateUser(function(sess, accessToken, accessTokenExtra, ghUser) {
-    return usersByGhId[ghUser.id] || (usersByGhId[ghUser.id] = addUser("github", ghUser, accessToken));
+    return usersByGhId[ghUser.id] || (usersByGhId[ghUser.id] = addUser('github', ghUser, accessToken));
   })
   .sendResponse(function(res, data) { /* default implementation */
     var user = data.user;
-    return this.redirect(res, "/");
-  }).redirectPath("/");
+    return this.redirect(res, '/');
+  }).redirectPath('/');
 
 /**
  * Globals used by everyauth for keeping track of the connected users.
@@ -46,7 +46,7 @@ var usersById = {};
 function addUser(source, sourceUser, token) {
   var user;
   user = usersById[nextUserId] = {id: nextUserId};
-  user["token"] = token;
+  user['token'] = token;
   user[source] = sourceUser;
   nextUserId++;
   return user;
@@ -59,7 +59,7 @@ function addUser(source, sourceUser, token) {
 function addUser(source, sourceUser, token) {
   var user;
   user = {id: nextUserId};
-  user["token"] = token;
+  user['token'] = token;
   user[source] = sourceUser;
   usersById[nextUserId] = user;
   nextUserId++;
@@ -80,10 +80,10 @@ everyauth.everymodule.findUserById(function(id, callback) {
  */
 app.configure(function(){
   app.use(express.cookieParser());
-  app.use(express.session({ secret: "secret" }));
-  app.set("views", __dirname + "/views");
-  app.engine("html", require("ejs").renderFile);
-  app.use(express.static(__dirname + "/public"));
+  app.use(express.session({ secret: 'secret' }));
+  app.set('views', __dirname + '/views');
+  app.engine('html', require('ejs').renderFile);
+  app.use(express.static(__dirname + '/public'));
   app.use(everyauth.middleware(app));
 
   // http://stackoverflow.com/questions/8378338/what-does-connect-js-methodoverride-do
@@ -97,13 +97,13 @@ app.configure(function(){
  * returned by everyauth and oauth is used by the github library to perform
  * authentication on the github object.
  */
- app.get("/", function(req, res){
+ app.get('/', function(req, res){
   if (req.loggedIn) {
     github.user.get({}, function(err, data) {
       if (err) {
-        console.log("try to authenticate...");
+        console.log('try to authenticate...');
         github.authenticate({
-            type: "oauth",
+            type: 'oauth',
             token: req.user.token
         });
       } else {
@@ -115,38 +115,38 @@ app.configure(function(){
 
   // Delete a gist
   // github.gists.delete({
-  //   id: "5291274"
+  //   id: '5291274'
   // }, function (err, data) {
   //   console.log(data);
   // })
 
   // Edit a gist
   // github.gists.edit({
-  //   id: "4960315",
+  //   id: '4960315',
   //   files: {
-  //     "test.js": {
-  //       "content": "We were stars..."
+  //     'test.js': {
+  //       'content': 'We were stars...'
   //     }
   //   }
   // }, function (err, data) {
   //   console.log(data);
   // });
 
-  var octocats = require("./octocat").octocats;
+  var octocats = require('./octocat').octocats;
   var octocat = octocats[Math.floor(Math.random()*octocats.length)];
 
-  res.render("index.ejs", {
-    title: "Live!",
-    widgets: require("./widgets").widgets,
+  res.render('index.ejs', {
+    title: 'Live!',
+    widgets: require('./widgets').widgets,
     octocat: octocat
   });
 });
 
 /**
  * Routing that responds to an ajax request for retrieving the gists
- * of a specific user. Returns the is and the description for each gist.
+ * of a specific user. Returns the id and the description for each gist.
  */
-app.post("/user", express.bodyParser(), function(req, res){
+app.post('/user', express.bodyParser(), function(req, res){
   var user = req.body.user;
   getGistsOfUser(user, function(err, data) {
     if (err) {
@@ -155,7 +155,7 @@ app.post("/user", express.bodyParser(), function(req, res){
       var gists = [];
       for (var i=0; i < data.length; i++) {
         gists.push({id:data[i].id, description:data[i].description});
-      };
+      }
       res.send(gists);
     }
   });
@@ -178,7 +178,7 @@ function getGistsOfUser(user, callback) {
  * gist from a gist id. Returns an object that contains the html and JS
  * files contained in the specified gist.
  */
-app.post("/gist", express.bodyParser(), function(req, res){
+app.post('/gist', express.bodyParser(), function(req, res){
   currentSelectedGistId = req.body.id;
 
   github.gists.get({
@@ -196,17 +196,26 @@ app.post("/gist", express.bodyParser(), function(req, res){
       if (files.hasOwnProperty(key)) {
         var filename = (files[key]).filename;
         var content = (files[key]).content;
-        var type = filename.match(/.*\.(.*)/)[1];
-        if (type == "html") {
+
+        var extension = filename.match(/.*\.(.*)/);
+        if (!extension) {
+          continue;
+        }
+
+        var type = extension[1];
+        if (type == 'html') {
           htmlFiles.push({id:currentSelectedGistId, filename:filename});
         }
-        if (type == "js") {
+        if (type == 'js') {
           jsFiles.push({id:currentSelectedGistId, filename:filename});
         }
       }
     }
 
-    res.send({"htmlfiles" : htmlFiles, "jsfiles" : jsFiles});
+    console.log('html files: ' + htmlFiles.length);
+    console.log('js files: ' + jsFiles.length);
+
+    res.send({'htmlfiles' : htmlFiles, 'jsfiles' : jsFiles});
   });
 });
 
@@ -214,14 +223,14 @@ app.post("/gist", express.bodyParser(), function(req, res){
  * Routing that responds to an ajax request for retrieving a specific
  * file from a gist. Returns the content of the file.
  */
-app.post("/file", express.bodyParser(), function(req, res){
+app.post('/file', express.bodyParser(), function(req, res){
   var file = req.body.filename;
 
   github.gists.get({
     id: currentSelectedGistId
   }, function(err, data) {
     if (err) {
-      console.log(err);
+      console.log('github.gists.get, ' + err);
       return;
     }
     var files = data.files;
@@ -234,9 +243,9 @@ app.post("/file", express.bodyParser(), function(req, res){
  * Routing that responds to the mobile device where the app is to be
  * rendered.
  */
-app.get("/mobile", function(req, res){
-    res.render("mobile.ejs", {
-        title: "Mobile!"
+app.get('/mobile', function(req, res){
+    res.render('mobile.ejs', {
+        title: 'Mobile!'
     });
 });
 
@@ -246,39 +255,65 @@ app.get("/mobile", function(req, res){
  * Note: socket.broadcast.emit will send the message to all the
  *       other clients except the newly created connection
  */
-io.sockets.on("connection", function(socket) {
+io.sockets.on('connection', function(socket) {
 
   // Add a client to a room
-  socket.on("room", function(room) {
+  socket.on('room', function(room) {
       socket.join(room);
-      console.log("A client has joined: " + room);
+      console.log('A client has joined: ' + room);
   });
-  
+
   // Send the html code to the mobile room
-  socket.on("html", function(code) {
-      io.sockets.in("mobile").emit("html", code);
+  socket.on('html', function(code) {
+    io.sockets.in('mobile').emit('html', code);
   });
 
   // Send the JavaScript code to the mobile room
-  socket.on("javascript", function(code) {
-      io.sockets.in("mobile").emit("javascript", code);
+  socket.on('javascript', function(code) {
+    io.sockets.in('mobile').emit('javascript', code);
   });
 
   // Send the edited code to github to update the gist file
-  socket.on("saveFileGist", function(data) {
+  socket.on('saveFileGist', function(data) {
+    var newFile = data['new'];
+    var filename = data.filename;
+    var type = data.type;
+
     var temp = {};
     temp.id = currentSelectedGistId;
     temp.files = {};
-    temp.files[data.filename] = {};
-    temp.files[data.filename]["content"] = data.code;
-    console.log(temp);
+    temp.files[filename] = {};
+
+    // without '...' in the content, the file is deleted or not created 
+    temp.files[filename]['content'] = data.code === '' ? '...' : data.code;
+
+    console.log('data.code: ---' + data.code + '---');
 
     github.gists.edit(temp, function(err, data) {
       if (err) {
-        // error
+        console.log(err);
+        console.log('Error saving file: ' + filename);
       } else {
-        io.sockets.in("webapp").emit("filesaved");
+        console.log('file saved! >>> ' + filename);
+        if(newFile) {
+          io.sockets.in('webapp').emit('filecreated', {id : currentSelectedGistId, filename : filename, type : type});
+        } else {
+          io.sockets.in('webapp').emit('filesaved');
+        }        
       }
     });
   });
+
+  socket.on('reset', function() {
+    io.sockets.in('mobile').emit('reset');
+  });
+  
+  socket.on('downloadResource', function(data) {
+    io.sockets.in('mobile').emit('downloadResource', data);
+  });
+
+  socket.on('fileSaved', function(message) {
+    io.sockets.in('webapp').emit('fileSaved', message);
+  });
+
 });

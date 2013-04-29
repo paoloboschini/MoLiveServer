@@ -9823,6 +9823,8 @@ mosync.nativeui.error = function(callbackID) {
  */
 mosync.nativeui.event = function(widgetHandle, eventType) {
 
+  console.log("mosync.nativeui.event");
+
 	var callbackID = widgetHandle + eventType;
 	var callbackFunctions = mosync.nativeui.eventCallBackTable[callbackID];
 	// if we have a listener registered for this combination, call it
@@ -9830,6 +9832,8 @@ mosync.nativeui.event = function(widgetHandle, eventType) {
 		// extract the function arguments
 		var args = Array.prototype.slice.call(arguments);
 		for (key in callbackFunctions) {
+      
+      console.log("for (key in callbackFunctions) {");
 
 			var callbackFun = callbackFunctions[key];
 			// Call the function.
@@ -10954,12 +10958,9 @@ mosync.nativeui.createWidget = function(widget, parent) {
 			mosync.nativeui.numWidgetsRequested--;
 			if (imageResources != null) {
 				mosync.resource.loadImage(imageResources.value,
-						widgetID + "image", function(imageID,
-								imageHandle) {
-							thisWidget.setProperty(
-									imageResources.propertyType,
-									imageHandle, null, null);
-
+						widgetID + "image",
+						function(imageID, imageHandle) {
+							thisWidget.setProperty(imageResources.propertyType, imageHandle, null, null);
 						});
 			}
 			if (eventList != null) {
@@ -11026,6 +11027,7 @@ mosync.nativeui.createChildren = function(parent, widget) {
  * @private
  */
 mosync.nativeui.CheckUIStatus = function() {
+  console.log("mosync.nativeui.numWidgetsRequested: " + mosync.nativeui.numWidgetsRequested);
 	if (0 == mosync.nativeui.numWidgetsRequested) {
 		window.clearInterval(mosync.nativeui.showInterval);
 		mosync.nativeui.UIReady();
@@ -11071,16 +11073,23 @@ mosync.nativeui.showScreen = function(screenID) {
  */
 mosync.nativeui.initUI = function() {
 	var MoSyncDiv = document.getElementById("NativeUI");
+  console.log("mosync.nativeui.initUI0");
 	if (!MoSyncDiv) {
 		// TODO: Add log error message.
+    console.log("mosync.nativeui.initUI1");
 		return false;
 	}
+  console.log("mosync.nativeui.initUI2");
 	MoSyncDiv.style.display = "none"; //hide the Native Container
 	var MoSyncNodes = document.getElementById("NativeUI").childNodes;
 	if (!MoSyncNodes) {
 		// TODO: Add log error message.
+    console.log("mosync.nativeui.initUI3");
 		return false;
 	}
+
+  console.log("mosync.nativeui.initUI4");
+
 	for (var i = 1; i < MoSyncNodes.length; i++) {
 		if ((MoSyncNodes[i] != null) && (MoSyncNodes[i].tagName != undefined)) {
 			if (MoSyncNodes[i].id == null) {
@@ -11090,6 +11099,7 @@ mosync.nativeui.initUI = function() {
 			mosync.nativeui.createChildren(null, MoSyncNodes[i]);
 		}
 	}
+
 	mosync.nativeui.showInterval = self.setInterval(
 		"mosync.nativeui.CheckUIStatus()", 100);
 	return true;

@@ -1,9 +1,11 @@
 <% if(everyauth.loggedIn) {%>
     <!-- Javascript Files List -->
-    <div style="margin-top:20px;">
-      <div class="btn-group">
-        <a class="btn  dropdown-toggle disabled" data-toggle="dropdown" href="#" id ="jsToggleButton">Choose a file (javascript)! <span class="caret" style="margin-top: 8px;"></span></a>
-        <ul class="dropdown-menu" id="jsList"></ul>
+    <div style='margin-top:20px;'>
+      <div class='btn-group'>
+        <a class='btn dropdown-toggle disabled' data-toggle='dropdown' href='choose' id ='jsToggleButton'>Choose a file (javascript)! <span class='caret' style='margin-top: 8px;'></span></a>
+        <ul class='dropdown-menu' id='jsList'>
+          <li><a id='newJSFile' href='asd'>New JS File...</a></li>
+        </ul>
       </div>
     </div>
 <% } %>

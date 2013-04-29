@@ -8,33 +8,56 @@
     socket.emit('room', 'mobile');
   });
 
-  /**
-   * On load of page
-   */
-  $(function() {
+  // socket.on('restoreWebView', function (code) {
+  //   mosync.nativeui.destroyAll();
+  //   mosync.bridge.send(['Custom', 'restoreWebView']);
+  // });
 
-    // socket.on('restoreWebView', function (code) {
-    //   mosync.nativeui.destroyAll();
-    //   mosync.bridge.send(["Custom", "restoreWebView"]);
-    // });
+  socket.on('html', function(code) {
+    reset();
 
-    socket.on('html', function(code) {
-      mosync.nativeui.destroyAll();
-      mosync.bridge.send(["Custom", "restoreWebView"]);
+    // mosync = null;
 
-      document.open("text/html");
-      document.write(code);
-      document.close();
+    document.open();
+    document.write(code);
+    document.close();
+
+    // socket.emit('document', document.body);
+  });
+
+  socket.on('javascript', function(code) {
+    try {
+      eval(code);
+    } catch(e) {
+      // If the user changes something that generate an error,
+      // we don't want to show an alert every time
+      // alert('something went wrong with the js!');
+      console.log("error!");
+      console.log(e.message);
+    }
+  });
+
+  socket.on('reset', function() {
+    reset();
+  });
+
+  function reset() {
+    mosync.nativeui.destroyAll();
+    mosync.nativeui.callBackTable = {};
+    mosync.nativeui.eventCallBackTable = {};
+    mosync.bridge.send(['Custom', 'restoreWebView']);
+  }
+
+  socket.on('downloadResource', function(data) {
+    mosync.bridge.send([
+      'Custom',
+      'downloadResource',
+      data.url,
+      data.filename
+    ], function(message) {
+      alert(message);
+      socket.emit('fileSaved', message);
     });
+  });
 
-    socket.on('javasript', function(code) {
-      try {
-        eval(code);
-      } catch(e) {
-        // If the user changes something that generate an error,
-        // we don't want to show an alert every time
-        // alert('something went wrong with the js!');
-      }
-    });
-  }); // on load of page
-})();
+})(); // (function() {
