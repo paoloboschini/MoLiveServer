@@ -241,6 +241,8 @@
     {tag: 'dfn', attr: []},
     {tag: 'dir', attr: []},
     {tag: 'div', attr: [
+      {key: 'data-widgetType', values: ["Image"]},
+      {key: 'image', values: ["cat.jpg"]},
       {key: 'id', values: []},
       {key: 'class', values: []},
       {key: 'style', values: []}
@@ -544,11 +546,7 @@
       {key: "width", values: []},
       {key: "height", values: []}
     ]},
-    {tag: 'wbr', attr: []},
-    {tag: 'gatto', attr: [
-      {key: "brumma", values: []},
-      {key: "miao", values: []}
-    ]}
+    {tag: 'wbr', attr: []}
   ];
 
   var globalAttributes = [
@@ -576,6 +574,10 @@
     {key: "onclick", values: []},
     {key: 'rel', values: ["stylesheet","alternate","author","bookmark","help","license","next","nofollow","noreferrer","prefetch","prev","search","tag"]}
   ];
+
+  CodeMirror.htmlStructure = function() {
+    return htmlStructure;
+  };
 
   CodeMirror.htmlHint = function(editor) {
     if(String.prototype.trim == undefined) {

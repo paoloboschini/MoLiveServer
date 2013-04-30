@@ -387,10 +387,6 @@
         $('#inputFilenameResource').val(s.substr(s.lastIndexOf('/') + 1));
     });
 
-    // TODO
-    $('#resourceModalSaveFromFile').click(function() {
-    });
-
     socket.on('fileSaved', function(message) {
       alert(message);
     });
@@ -465,6 +461,33 @@
 
     $('#downloadResource').click(function() {
       socket.emit('downloadResource');
+    });
+
+    $('#upload').submit(function(e) {
+      console.log('submit');
+      e.preventDefault();
+
+      $(this).ajaxSubmit({
+        success: function(response) {
+          if(response.error) {
+            status('Opps, something bad happened');
+            return;
+          }
+          // alert('file uploaded!');
+          $('#downloadResourceModal').modal('hide');
+          socket.emit('downloadResource', {url : 'http://localhost:5678/uploads/' + response, filename : response });
+
+          var res = $.grep(CodeMirror.htmlStructure(), function(e) {
+            return e.tag == 'div';
+          });
+          var image = $.grep(res[0].attr, function(e) {
+            return e.key == 'image';
+          });
+          image[0].values.push(response);
+        }
+      });
+
+      return false;
     });
 
     /* Tangle for the delay

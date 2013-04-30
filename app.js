@@ -2,7 +2,8 @@
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
-    io = require('socket.io').listen(server);
+    io = require('socket.io').listen(server),
+    fs = require('fs');
 server.listen(5678);
 
 // Init the GitHub Api, https://github.com/ajaxorg/node-github
@@ -79,6 +80,7 @@ everyauth.everymodule.findUserById(function(id, callback) {
  * Setup the Express app.
  */
 app.configure(function(){
+  app.use(express.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'secret' }));
   app.set('views', __dirname + '/views');
@@ -88,7 +90,7 @@ app.configure(function(){
 
   // http://stackoverflow.com/questions/8378338/what-does-connect-js-methodoverride-do
   // app.use(express.methodOverride());
-})
+});
 
 /**
  * Routing for the homepage. If we are logged in to GitHub via everyauth,
@@ -146,7 +148,7 @@ app.configure(function(){
  * Routing that responds to an ajax request for retrieving the gists
  * of a specific user. Returns the id and the description for each gist.
  */
-app.post('/user', express.bodyParser(), function(req, res){
+app.post('/user', function(req, res){
   var user = req.body.user;
   getGistsOfUser(user, function(err, data) {
     if (err) {
@@ -178,7 +180,7 @@ function getGistsOfUser(user, callback) {
  * gist from a gist id. Returns an object that contains the html and JS
  * files contained in the specified gist.
  */
-app.post('/gist', express.bodyParser(), function(req, res){
+app.post('/gist', function(req, res){
   currentSelectedGistId = req.body.id;
 
   github.gists.get({
@@ -223,7 +225,7 @@ app.post('/gist', express.bodyParser(), function(req, res){
  * Routing that responds to an ajax request for retrieving a specific
  * file from a gist. Returns the content of the file.
  */
-app.post('/file', express.bodyParser(), function(req, res){
+app.post('/file', function(req, res){
   var file = req.body.filename;
 
   github.gists.get({
@@ -247,6 +249,20 @@ app.get('/mobile', function(req, res){
     res.render('mobile.ejs', {
         title: 'Mobile!'
     });
+});
+
+app.post('/upload', function(req, res){
+  console.log(req.files);
+
+  fs.readFile(req.files.savefile.path, function (err, data) {
+    var newPath = __dirname + '/public/uploads/' + req.files.savefile.name;
+    console.log(newPath);
+    fs.writeFile(newPath, data, function (err) {
+      console.log(err);
+      res.send(req.files.savefile.name);
+    });
+  });
+
 });
 
 /**
@@ -299,7 +315,7 @@ io.sockets.on('connection', function(socket) {
           io.sockets.in('webapp').emit('filecreated', {id : currentSelectedGistId, filename : filename, type : type});
         } else {
           io.sockets.in('webapp').emit('filesaved');
-        }        
+        }
       }
     });
   });
