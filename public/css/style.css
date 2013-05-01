@@ -6,16 +6,18 @@ body {
 }
 
 .CodeMirror {}
+
 .CodeMirror pre.CodeMirror-placeholder {
   color: #999;
 }
-.CodeMirror-focused .cm-matchhighlight {
+
+/*.CodeMirror-focused .cm-matchhighlight {
   background: rgba(255, 0, 0, 0.5);
 }
 .CodeMirror-activeline-background {
   background: rgba(100, 100, 100, 0.2) !important;
 }
-
+*/
 #header {
   background: #003B80;
   height: 50px;
@@ -55,13 +57,13 @@ body {
   height: 50px;
 }
 
-#git-user {
-  color: white;
-}
-
 #loadIndicator {
   float:left;
   position:relative;
   width: 20px;
   height: 100%;
+}
+
+#git-user {
+  color: white;
 }

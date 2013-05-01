@@ -111,6 +111,9 @@
         success: function(response) {
           hideLoadIndicator();
 
+          $('#htmlToggleButton').attr('href', 'choose');
+          $('#jsToggleButton').attr('href', 'choose');
+
           if (response.htmlfiles.length > 0) {
             $('#htmlToggleButton').addClass('btn-success');
           }

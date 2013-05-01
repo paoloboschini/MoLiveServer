@@ -4,6 +4,11 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     fs = require('fs');
+
+io.enable('browser client minification');  // send minified client
+io.enable('browser client etag');          // apply etag caching logic based on version number
+io.enable('browser client gzip');          // gzip the file
+
 server.listen(5678);
 
 // Init the GitHub Api, https://github.com/ajaxorg/node-github
@@ -80,6 +85,7 @@ everyauth.everymodule.findUserById(function(id, callback) {
  * Setup the Express app.
  */
 app.configure(function(){
+  app.use(express.compress());
   app.use(express.bodyParser());
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'secret' }));

@@ -101,7 +101,7 @@ var codemirror = (function() {
       if( !$('#savecode').hasClass('disabled') &&
           !$('#savecode').hasClass('btn-info') &&
           $(toggleButtonName).text() != 'Choose a file (' + codeType + ')! ' &&
-          (change.origin == '+input' || change.origin == '+delete')) {
+          (change.origin == '+input' || change.origin == '+delete' || change.origin == 'undo')) {
         $('#savecode').addClass('btn-info');
       }
     });
