@@ -67,20 +67,18 @@
       <% include execute %>
     </div>
 
-    <div id='two' style='width:34%;height:100%;float:left;'>
+    <div id='two' style='width:34%;height:100%;float:left;background:#aaa;position:relative;'>
       <% if(everyauth.loggedIn) {%>
-        <div id='twoleft' style='width:42%;height:100%;float:left;'>
+        <div style='background:red;top:0;left:0;width:50%;height:100%;position:absolute;'>
           <% include htmlfilespicker %>
         </div>
-
-        <div id='twoCenter' style='width:16%;height:100%;float:left;'>
-          <div style='width:58px;margin:0 auto;margin-top:20px;'>
+        <div style='background:green;top:0;right:0;width:50%;height:100%;position:absolute;'>
+          <% include jsfilespicker %>
+        </div>
+        <div style='width:58px;margin:0 auto;margin-top:20px;'>
+          <div style='position:absolute';>
             <button id='savecode' class='btn disabled' type='button'>Save</button>
           </div>
-        </div>
-
-        <div id='twoRight' style='width:42%;height:100%;float:left;'>
-          <% include jsfilespicker %>
         </div>
       <% } %>
     </div>
