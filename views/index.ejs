@@ -47,6 +47,8 @@
   <script type='text/javascript' src='/js/TangleKit/TangleKit.js'></script>
 
   <script src="/js/jquery.form.js"></script>
+  <script src='/js/codemirror.js'></script>
+  <script src='/js/gist.js'></script>
   <script src='/js/js.js'></script>
   <link href='/css/style.css' rel='stylesheet' media='screen'>
 </head>
@@ -67,17 +69,17 @@
 
     <div id='two' style='width:34%;height:100%;float:left;'>
       <% if(everyauth.loggedIn) {%>
-        <div id='twoleft' style='width:40%;height:100%;float:left;'>
+        <div id='twoleft' style='width:42%;height:100%;float:left;'>
           <% include htmlfilespicker %>
         </div>
 
-        <div id='twoCenter' style='width:20%;height:100%;float:left;'>
+        <div id='twoCenter' style='width:16%;height:100%;float:left;'>
           <div style='width:58px;margin:0 auto;margin-top:20px;'>
             <button id='savecode' class='btn disabled' type='button'>Save</button>
           </div>
         </div>
 
-        <div id='twoRight' style='width:40%;height:100%;float:left;'>
+        <div id='twoRight' style='width:42%;height:100%;float:left;'>
           <% include jsfilespicker %>
         </div>
       <% } %>

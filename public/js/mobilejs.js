@@ -55,7 +55,7 @@
       data.url,
       data.filename
     ], function(message) {
-      socket.emit('fileSaved', message ? 'Resource saved' : 'Resource not saved');
+      socket.emit('fileSaved', message);
     });
   });
 

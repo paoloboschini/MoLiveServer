@@ -148,7 +148,7 @@ app.configure(function(){
  * Routing that responds to an ajax request for retrieving the gists
  * of a specific user. Returns the id and the description for each gist.
  */
-app.post('/user', function(req, res){
+app.post('/gists', function(req, res){
   var user = req.body.user;
   getGistsOfUser(user, function(err, data) {
     if (err) {

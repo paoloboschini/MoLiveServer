@@ -15,102 +15,8 @@
   // On load of page
   $(function() {
 
-    // Init html code mirror
-    var htmlCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmHtml'), {
-      theme: 'ambiance',
-      lineNumbers: true,
-      tabSize: 2,
-      mode: 'text/html',
-      matchBrackets: true,
-      autoCloseBrackets: true,
-      // mode: 'xml',
-      // htmlMode: true,
-      extraKeys: {'Ctrl-Space': 'autocompleteHtml'},
-      autoCloseTags: true,
-      highlightSelectionMatches: true,
-      // styleActiveLine: true,
-      lineWrapping: true,
-
-      // onKeyEvent: function(cm, s){ 
-      //   if (s.type == 'keyup') { 
-      //     passAndHintHtml(cm); 
-      //   } 
-      // }, 
-
-      lineNumberFormatter: function(number) {
-        return number === 1 ? '•' : number;
-      }
-    });
-
-    function passAndHintHtml(cm) {
-      setTimeout(function() {cm.execCommand('autocompleteHtml');}, 100);
-      return CodeMirror.Pass;
-    }
-
-    htmlCodeMirror.setSize('100%', '100%');
-    onChange(htmlCodeMirror, 'html', '#htmlToggleButton');
-    CodeMirror.commands.autocompleteHtml = function(cm) {
-      CodeMirror.showHint(cm, CodeMirror.htmlHint);
-    };
-
-    // Init javascript code mirror
-    var jsCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmJS'), {
-      theme: 'ambiance',
-      lineNumbers: true,
-      matchBrackets: true,
-      tabSize: 2,
-      mode: 'javascript',
-      // styleActiveLine: true,
-      lineWrapping: true,
-      autoCloseBrackets: true,
-      highlightSelectionMatches: true,
-      extraKeys: {'Ctrl-Space': 'autocompleteJS'},
-
-      // This, togheter with passAndHint, will trigger autocomplete at each keyup
-      // onKeyEvent: function(cm, s){
-      //   if (s.type == 'keyup') {
-      //     passAndHintJS(cm);
-      //   }
-      // },
-
-      lineNumberFormatter: function(number) {
-        return number === 1 ? '•' : number;
-      }
-    });
-
-    function passAndHintJS(cm) {
-      setTimeout(function() {cm.execCommand('autocompleteJS');}, 100);
-      return CodeMirror.Pass;
-    }
-
-    jsCodeMirror.setSize('100%', '100%');
-    onChange(jsCodeMirror, 'javascript', '#jsToggleButton');
-    CodeMirror.commands.autocompleteJS = function(cm) {
-      CodeMirror.showHint(cm, CodeMirror.javascriptHint);
-    };
-
-    /**
-     * Define onChange for each editor
-     */
-    function onChange(cm, codeType, toggleButtonName) {
-      cm.on('change', function(editor, change) {
-        if ($('#autoload').is(':checked')) {
-          emitCode(codeType,editor);
-        }
-
-        if($('#gistsToggleLink').attr('href') != 'choose') {
-          $('#savecode').removeClass('disabled').removeClass('btn-info');
-        }
-
-        // Change color of save button to give feedback of a modified file
-        if( !$('#savecode').hasClass('disabled') &&
-            !$('#savecode').hasClass('btn-info') &&
-            $(toggleButtonName).text() != 'Choose a file (' + codeType + ')! ' &&
-            (change.origin == '+input' || change.origin == '+delete')) {
-          $('#savecode').addClass('btn-info');
-        }
-      });
-    }
+    var htmlCodeMirror = codemirror.initHtmlCodeMirror();
+    var jsCodeMirror = codemirror.initJSCodeMirror();
 
     /**
      * Emit code through the socket.
@@ -128,21 +34,29 @@
       }, latencyFromLastPress + 10);
     }
 
+    function showLoadIndicator() {
+      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+    }
+
+    function hideLoadIndicator() {
+      $('#loadIndicator').css('background', '#003B80');
+    }
+
     // If everyauth is logged in, get gists.
     var user = $('#git-user').text();
     if (user.length !== 0) {
       console.log(user + ' is logged in.');
 
-      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      showLoadIndicator();
 
       $.ajax({
-        url: '/user',
+        url: '/gists',
         type: 'POST',
         data: {user : user},
         cache: false,
         timeout: 10000,
         success: function(response) {
-          $('#loadIndicator').css('background', '#003B80');
+          hideLoadIndicator();
           // 
           // if (response.error) {
           //   alert(response.error);
@@ -186,7 +100,7 @@
       var id = $(this).attr('href');
       $('#gistsToggleLink').attr('href', id);
 
-      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      showLoadIndicator();
 
       $.ajax({
         url: '/gist',
@@ -195,7 +109,7 @@
         timeout: 10000,
         cache: false,
         success: function(response) {
-          $('#loadIndicator').css('background', '#003B80');
+          hideLoadIndicator();
 
           if (response.htmlfiles.length > 0) {
             $('#htmlToggleButton').addClass('btn-success');
@@ -234,7 +148,7 @@
       var filename = $(this).text();
       var id = $(this).attr('href');
       $(currentClass == 'htmlFile' ? '#htmlToggleButton' : '#jsToggleButton').attr('href', id);
-      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      showLoadIndicator();
       $.ajax({
         url: '/file',
         type: 'POST',
@@ -242,7 +156,7 @@
         timeout: 10000,
         cache: false,
         success: function(response) {
-          $('#loadIndicator').css('background', '#003B80');
+          hideLoadIndicator();
           $(currentClass == 'htmlFile' ? '#htmlToggleButton' : '#jsToggleButton')
             .text(filename+' ')
             .append('<span class="caret" style="margin-top: 8px;"></span>');
@@ -329,7 +243,7 @@
       }
 
       $('#savecode').removeClass('btn-info');
-      $('#loadIndicator').css('background', '#003B80 url("/img/ajax-loader.gif") no-repeat 0px 30px');
+      showLoadIndicator();
     });
 
     $('#bothModalSave').click(function() {
@@ -414,7 +328,7 @@
     });
 
     function showMessageFileSaved() {
-      $('#loadIndicator').css('background', '#003B80');
+      hideLoadIndicator();
       $('#fileSaved').fadeIn(1000, function() {
         $('#fileSaved').fadeOut(3000);
       });
