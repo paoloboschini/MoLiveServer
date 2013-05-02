@@ -365,10 +365,11 @@
     $('#editors').resizable({handles: 's'});
 
     $('.collapse').collapse();
-    $('.collapse').on('shown', function () {
+    $('.widget').on('shown', function () {
+      console.log(this);
       $(this).parent().css('background-color', '#C9E7C4');
     });
-    $('.collapse').on('hidden', function () {
+    $('.widget').on('hidden', function () {
       $(this).parent().css('background-color', 'white');
     });
 

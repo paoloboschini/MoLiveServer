@@ -14,7 +14,11 @@
   // });
 
   socket.on('html', function(code) {
-    reset();
+
+    mosync.nativeui.callBackTable = {};
+    mosync.nativeui.eventCallBackTable = {};
+
+    // reset();
 
     // mosync = null;
 
@@ -43,8 +47,6 @@
 
   function reset() {
     mosync.nativeui.destroyAll();
-    mosync.nativeui.callBackTable = {};
-    mosync.nativeui.eventCallBackTable = {};
     mosync.bridge.send(['Custom', 'restoreWebView']);
   }
 
