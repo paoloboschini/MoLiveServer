@@ -2,13 +2,15 @@ var codemirror = (function() {
 
   var codemirror = {};
   var socket;
+  var htmlCodeMirror;
+  var jsCodeMirror;
 
   codemirror.setSocket = function(s) {
     socket = s;
   };
 
   codemirror.initHtmlCodeMirror = function() {
-    var htmlCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmHtml'), {
+    htmlCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmHtml'), {
       theme: 'ambiance',
       lineNumbers: true,
       tabSize: 2,
@@ -51,7 +53,7 @@ var codemirror = (function() {
   }; // codemirrors.initHtmlCm
 
   codemirror.initJSCodeMirror = function() {
-    var jsCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmJS'), {
+    jsCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmJS'), {
       theme: 'ambiance',
       lineNumbers: true,
       matchBrackets: true,
@@ -96,8 +98,19 @@ var codemirror = (function() {
    */
   function onChange(cm, codeType, toggleButtonName) {
     cm.on('change', function(editor, change) {
+
       if ($('#autoload').is(':checked')) {
-        emitCode(codeType,editor);
+
+        if (codeType == 'html') {
+          emitCode(codeType,editor);
+          emitCode('javascript', jsCodeMirror);
+        }
+
+        if (codeType == 'javascript') {
+          emitCode('html', htmlCodeMirror);
+          emitCode(codeType,editor);
+        }
+
       }
 
       if($('#gistsToggleLink').attr('href') != 'choose') {
@@ -118,7 +131,7 @@ var codemirror = (function() {
    * Emit code through the socket.
    * This function is bound to any change made to the code editors.
    */
-  var latencyFromLastPress = 500;
+  var latencyFromLastPress = 100;
   var lastKeypress = null;
   function emitCode(codeType, editor) {
     lastKeypress = new Date().getTime();

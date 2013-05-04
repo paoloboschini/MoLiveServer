@@ -9,13 +9,6 @@
   });
 
   socket.on('html', function(code) {
-
-    // mosync.nativeui.destroyAll();
-    // mosync.bridge.send(['Custom', 'restoreWebView']);
-    // mosync.bridge.send(['Custom', 'restoreWebView']);
-    // mosync.nativeui.callBackTable = {};
-    // mosync.nativeui.eventCallBackTable = {};
-
     reset();
 
     // mosync = null;
@@ -24,7 +17,6 @@
     document.write(code);
     document.close();
 
-    // socket.emit('document', document.body);
   });
 
   socket.on('javascript', function(code) {
@@ -46,7 +38,8 @@
   function reset() {
     mosync.nativeui.destroyAll();
     mosync.bridge.send(['Custom', 'restoreWebView']);
-    mosync.bridge.send(['Custom', 'restoreWebView']);
+    mosync.nativeui.callBackTable = {};
+    mosync.nativeui.eventCallBackTable = {};
   }
 
   socket.on('downloadResource', function(data) {
