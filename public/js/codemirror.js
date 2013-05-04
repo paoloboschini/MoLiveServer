@@ -1,6 +1,11 @@
 var codemirror = (function() {
 
   var codemirror = {};
+  var socket;
+
+  codemirror.setSocket = function(s) {
+    socket = s;
+  };
 
   codemirror.initHtmlCodeMirror = function() {
     var htmlCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmHtml'), {
@@ -25,7 +30,8 @@ var codemirror = (function() {
       // }, 
 
       lineNumberFormatter: function(number) {
-        return number === 1 ? '•' : number;
+        // return number === 1 ? '•' : number;
+        return number;
       }
     });
 
@@ -65,7 +71,8 @@ var codemirror = (function() {
       // },
 
       lineNumberFormatter: function(number) {
-        return number === 1 ? '•' : number;
+        // return number === 1 ? '•' : number;
+        return number;
       }
     });
 
@@ -105,6 +112,22 @@ var codemirror = (function() {
         $('#savecode').addClass('btn-info');
       }
     });
+  }
+
+  /**
+   * Emit code through the socket.
+   * This function is bound to any change made to the code editors.
+   */
+  var latencyFromLastPress = 500;
+  var lastKeypress = null;
+  function emitCode(codeType, editor) {
+    lastKeypress = new Date().getTime();
+    setTimeout(function() {
+      var currentTime = new Date().getTime();
+      if (currentTime - lastKeypress > latencyFromLastPress) {
+        socket.emit(codeType, editor.getValue());
+      }
+    }, latencyFromLastPress + 10);
   }
 
   return codemirror;

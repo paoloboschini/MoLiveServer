@@ -116,7 +116,7 @@ app.configure(function(){
         });
       } else {
         // We are authenticated!
-        console.log(data);
+        console.log('We are authenticated! ' + data);
       }
     });
   }
@@ -140,13 +140,13 @@ app.configure(function(){
   //   console.log(data);
   // });
 
-  var octocats = require('./octocat').octocats;
-  var octocat = octocats[Math.floor(Math.random()*octocats.length)];
+  // var octocats = require('./octocat').octocats;
+  // var octocat = octocats[Math.floor(Math.random()*octocats.length)];
 
   res.render('index.ejs', {
     title: 'Live!',
-    widgets: require('./widgets').widgets,
-    octocat: octocat
+    widgets: require('./widgets').widgets
+    // octocat: octocat
   });
 });
 
@@ -338,4 +338,11 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('webapp').emit('fileSaved', message);
   });
 
+  socket.on('getListResources', function(resources) {
+    io.sockets.in('mobile').emit('getListResources', resources);
+  });
+
+  socket.on('listResources', function(resources) {
+    io.sockets.in('webapp').emit('listResources', resources);
+  });
 });

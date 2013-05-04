@@ -13,10 +13,10 @@ exports.widgets = [
       ['textHorizontalAlignment', 'Sets the horizontal alignment of the text inside the button. Values: left, center (default), right.'],
       ['fontColor', 'Sets the font color of the button\'s text. Value: any hex color values, i.e. the pink color is "#FF00FF"'],
       ['fontSize', 'Sets the font size in points of the button\'s text. Value: any integers.'],
-      ['fontHandle', 'Sets the typeface and style in which the text should be displayed.']
+      ['fontHandle (not working?)', 'Sets the typeface and style in which the text should be displayed.']
     ]
   },
-  { name: 'CameraPreview',
+  { name: 'CameraPreview (not working?)',
     description: 'A Camera preview widget is a widget that can bound to a camera and contain the live view data from the camera.'
   },
   { name: 'CheckBox',
@@ -81,12 +81,11 @@ exports.widgets = [
       ['paddingBottom', 'Sets the bottom padding (px).']
     ]
   },
-  // TODO: From here, check values of properties
   { name: 'Image',
     description: 'An image is a widget that can be used to display an image.',
     properties: [
       ['image', 'Sets the image that will be displayed.'],
-      ['scaleMode', 'Specifies what type of scaling should be applied to the image.']
+      ['scaleMode', 'Specifies what type of scaling should be applied to the image. Values: "none" (default), "scaleXY" or "scalePreserveAspect".']
     ]
   },
   { name: 'ImageButton',
@@ -112,10 +111,11 @@ exports.widgets = [
       ['fontHandle','Sets the typeface and style in which the text should be displayed.'],
       ['maxNumberOfLines','Sets the maximum number of lines used for rendering text. To remove any maximum limit, and use as many lines as needed, set the value of this property to 0']
     ] },
+  // TODO: From here, check values of properties
   { name: 'ListView',
     description: 'A list view is a vertical list of widgets that is also scrollable.' },
   { name: 'ListViewItem',
-    description: 'A list view item is a special kind of layout compatible with the list view. That has a predefined common layout for adding text, an icon etc.',
+    description: 'A list view item is a special kind of layout compatible with the list view. It has a predefined common layout for adding text, an icon etc.',
     properties: [
       ['text','Sets the text part of the list view item. If there is an icon the text will be placed to the right of it, otherwise near the left edge.'],
       ['icon','Sets an icon of the list view item that is placed to the left of the text.'],

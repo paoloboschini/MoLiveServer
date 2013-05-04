@@ -8,17 +8,15 @@
     socket.emit('room', 'mobile');
   });
 
-  // socket.on('restoreWebView', function (code) {
-  //   mosync.nativeui.destroyAll();
-  //   mosync.bridge.send(['Custom', 'restoreWebView']);
-  // });
-
   socket.on('html', function(code) {
 
-    mosync.nativeui.callBackTable = {};
-    mosync.nativeui.eventCallBackTable = {};
+    // mosync.nativeui.destroyAll();
+    // mosync.bridge.send(['Custom', 'restoreWebView']);
+    // mosync.bridge.send(['Custom', 'restoreWebView']);
+    // mosync.nativeui.callBackTable = {};
+    // mosync.nativeui.eventCallBackTable = {};
 
-    // reset();
+    reset();
 
     // mosync = null;
 
@@ -48,6 +46,7 @@
   function reset() {
     mosync.nativeui.destroyAll();
     mosync.bridge.send(['Custom', 'restoreWebView']);
+    mosync.bridge.send(['Custom', 'restoreWebView']);
   }
 
   socket.on('downloadResource', function(data) {
@@ -58,6 +57,15 @@
       data.filename
     ], function(message) {
       socket.emit('fileSaved', message);
+    });
+  });
+
+  socket.on('getListResources', function() {
+    mosync.bridge.send([
+      'Custom',
+      'getListResources'
+    ], function(resources) {
+      socket.emit('listResources', resources);
     });
   });
 
