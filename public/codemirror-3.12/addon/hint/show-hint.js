@@ -19,11 +19,17 @@ CodeMirror.showHint = function(cm, getHints, options) {
   }
 
   function pickCompletion(cm, data, completion) {
-    if (completion.hint) completion.hint(cm, data, completion);
-    else cm.replaceRange(getText(completion), data.from, data.to);
+    if (completion.hint) {
+      completion.hint(cm, data, completion);
+    }
+    else {
+      cm.replaceRange(getText(completion), data.from, data.to);
+      CodeMirror.setCurrentWidget(getText(completion));
+    }
   }
 
   function showHints(data) {
+
     if (!data || !data.list.length) return;
     var completions = data.list;
     // When there is only one completion, use it directly.
@@ -44,6 +50,7 @@ CodeMirror.showHint = function(cm, getHints, options) {
       if (completion.render) completion.render(elt, data, completion);
       else elt.appendChild(document.createTextNode(completion.displayText || getText(completion)));
       elt.hintId = i;
+      // console.log('elt:', elt);
     }
     var pos = cm.cursorCoords(options.alignWithWord !== false ? data.from : null);
     var left = pos.left, top = pos.bottom, below = true;

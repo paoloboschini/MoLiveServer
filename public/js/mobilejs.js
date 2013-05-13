@@ -26,8 +26,7 @@
       // If the user changes something that generate an error,
       // we don't want to show an alert every time
       // alert('something went wrong with the js!');
-      console.log("error!");
-      console.log(e.message);
+      socket.emit('evalError', e.message);
     }
   });
 
@@ -38,8 +37,12 @@
   function reset() {
     mosync.nativeui.destroyAll();
     mosync.bridge.send(['Custom', 'restoreWebView']);
+    mosync.bridge.send(['Custom', 'restoreWebView']);
     mosync.nativeui.callBackTable = {};
     mosync.nativeui.eventCallBackTable = {};
+
+    mosync.nativeui.numWidgetsRequested = 0;
+    window.clearInterval(mosync.nativeui.showInterval);
   }
 
   socket.on('downloadResource', function(data) {

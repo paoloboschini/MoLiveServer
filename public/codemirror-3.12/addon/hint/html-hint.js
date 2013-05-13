@@ -2,6 +2,7 @@
   function htmlHint(editor, htmlStructure, getToken) {
     var cur = editor.getCursor();
     var token = getToken(editor, cur);
+    console.log('token:', token);
     var keywords = [];
     var i = 0;
     var j = 0;
@@ -11,44 +12,97 @@
     var flagClean = true;
 
     var text = editor.getRange({line: 0, ch: 0}, cur);
+    console.log('text:', text);
 
     var open = text.lastIndexOf('<');
     var close = text.lastIndexOf('>');
     var tokenString = token.string.replace("<","");
+    console.log('tokenString:', tokenString);
 
+    // We enter in this branch if we are inside an unclosed tag
     if(open > close) {
+      console.log('if(open > close) {:');
       var last = editor.getRange({line: cur.line, ch: cur.ch - 1}, cur);
+      console.log('last:', last);
+
+      // We enter this branch if we are just after a <, so give
+      // us all tags
       if(last == "<") {
+        console.log('if(last == "<") {:');
+        currentWidget = "";
         for(i = 0; i < htmlStructure.length; i++) {
           keywords.push(htmlStructure[i].tag);
         }
         from.ch = token.start + 1;
+
+      // No < as last tag? Then check attr of tag
       } else {
         var counter = 0;
+        var tokens = [];
         var found = function(token, type, position) {
+          tokens.push(token.string);
           counter++;
           if(counter > 50) return;
           if(token.type == type) {
             return token;
           } else {
             position.ch = token.start;
+            if(position.ch === 0) {
+              position.ch = editor.getLine(position.line-1).length;
+              position.line = position.line-1;
+            }
             var newToken = editor.getTokenAt(position);
+            console.log('newToken:', newToken);
             return found(newToken, type, position);
           }
         };
 
         var nodeToken = found(token, "tag", {line: cur.line, ch: cur.ch});
+        console.log('counter:', counter);
+        console.log('nodeToken:', nodeToken);
+        console.log('tokens:', tokens);
         var node = nodeToken.string.substring(1);
 
-        if(token.type === null && token.string.trim() === "") {
-          for(i = 0; i < htmlStructure.length; i++) {
-            if(htmlStructure[i].tag == node) {
-              for(j = 0; j < htmlStructure[i].attr.length; j++) {
-                keywords.push(htmlStructure[i].attr[j].key + "=\"\" ");
-              }
+        var index = tokens.indexOf("data-widgetType")-2;
+        if (index > 0) {
+          var widgetOnLine = tokens[index].substr(1, tokens[index].length-2);
+          console.log('widgetOnLine:', widgetOnLine);
+          console.log('widgetsName():', widgetsName());
+          if($.inArray(widgetOnLine, widgetsName()) != -1) {
+            currentWidget = widgetOnLine;
+          }
+        }
 
-              for(k = 0; k < globalAttributes.length; k++) {
-                keywords.push(globalAttributes[k].key + "=\"\" ");
+        if($.inArray("data-widgetType",tokens) === -1) currentWidget = "";
+
+        if(token.type === null && token.string.trim() === "") {
+          // if we selected a widget in a node
+          if(currentWidget !== "") {
+            for (i = 0; i < widgets.length; i++) {
+              if(widgets[i].name == currentWidget) {
+                for (j = 0; j < widgets[i].properties.length; j++) {
+                  keywords.push(widgets[i].properties[j].name + "=\"\" ");
+                }
+              }
+            }
+
+            keywords.push(" ");
+            keywords.push("---generalProperties---");
+
+            for (i = 0; i < generalPropertiesWidget.length; i++) {
+              keywords.push(generalPropertiesWidget[i] + "=\"\" ");
+            }
+          }
+          else {
+            for(i = 0; i < htmlStructure.length; i++) {
+              if(htmlStructure[i].tag == node) {
+                for(j = 0; j < htmlStructure[i].attr.length; j++) {
+                  keywords.push(htmlStructure[i].attr[j].key + "=\"\" ");
+                }
+
+                for(k = 0; k < globalAttributes.length; k++) {
+                  keywords.push(globalAttributes[k].key + "=\"\" ");
+                }
               }
             }
           }
@@ -56,6 +110,23 @@
           tokenString = tokenString.substring(1, tokenString.length - 1);
           var attributeToken = found(token, "attribute", {line: cur.line, ch: cur.ch});
           var attribute = attributeToken.string;
+
+          console.log('attribute:', attribute);
+          console.log('currentWidget:', currentWidget);
+
+          // Add values of current attribute of current widget
+          for (i = 0; i < widgets.length; i++) {
+            if(widgets[i].name == currentWidget) {
+              console.log('widgets[i] == currentWidget', widgets[i], currentWidget);
+              for (j = 0; j < widgets[i].properties.length; j++) {
+                if(attribute == widgets[i].properties[j].name) {
+                  for (k = 0; k < widgets[i].properties[j].values.length; k++) {
+                    keywords.push(widgets[i].properties[j].values[k]);
+                  }
+                }
+              }
+            }
+          }
 
           for(i = 0; i < htmlStructure.length; i++) {
             if(htmlStructure[i].tag == node) {
@@ -78,19 +149,39 @@
           }
           from.ch = token.start + 1;
         } else if(token.type == "attribute") {
-          for(i = 0; i < htmlStructure.length; i++) {
-            if(htmlStructure[i].tag == node) {
-              for(j = 0; j < htmlStructure[i].attr.length; j++) {
-                keywords.push(htmlStructure[i].attr[j].key + "=\"\" ");
+          // if we selected a widget in a node
+          if(currentWidget !== "") {
+            for (i = 0; i < widgets.length; i++) {
+              if(widgets[i].name == currentWidget) {
+                for (j = 0; j < widgets[i].properties.length; j++) {
+                  keywords.push(widgets[i].properties[j].name + "=\"\" ");
+                }
               }
+            }
 
-              for(k = 0; k < globalAttributes.length; k++) {
-                keywords.push(globalAttributes[k].key + "=\"\" ");
+            keywords.push(" ");
+            keywords.push("---generalProperties---");
+
+            for (i = 0; i < generalPropertiesWidget.length; i++) {
+              keywords.push(generalPropertiesWidget[i] + "=\"\" ");
+            }
+          }
+          else {
+            for(i = 0; i < htmlStructure.length; i++) {
+              if(htmlStructure[i].tag == node) {
+                for(j = 0; j < htmlStructure[i].attr.length; j++) {
+                  keywords.push(htmlStructure[i].attr[j].key + "=\"\" ");
+                }
+
+                for(k = 0; k < globalAttributes.length; k++) {
+                  keywords.push(globalAttributes[k].key + "=\"\" ");
+                }
               }
             }
           }
-          from.ch = token.start;
+        from.ch = token.start;
         } else if(token.type == "tag") {
+          console.log('} else if(token.type == "tag") {');
           for(i = 0; i < htmlStructure.length; i++) {
             keywords.push(htmlStructure[i].tag);
           }
@@ -99,6 +190,10 @@
         }
       }
     } else {
+      console.log('if(open < close) {:');
+
+      currentWidget = "";
+
       for(i = 0; i < htmlStructure.length; i++) {
         keywords.push("<" + htmlStructure[i].tag);
       }
@@ -108,10 +203,12 @@
     }
 
     if(flagClean === true && tokenString.trim() === "") {
+      // console.log('if(flagClean === true && tokenString.trim() === "") {');
       flagClean = false;
     }
 
     if(flagClean) {
+      // console.log('if(flagClean) {');
       keywords = cleanResults(tokenString, keywords);
     }
 
@@ -120,16 +217,291 @@
 
 
   var cleanResults = function(text, keywords) {
+    console.log('cleanResults');
     var results = [];
     var i = 0;
 
     for(i = 0; i < keywords.length; i++) {
+      // console.log('keywords[i].substring(0, text.length): ',keywords[i].substring(0, text.length));
+      // console.log('text: ',text);
       if(keywords[i].substring(0, text.length) == text) {
         results.push(keywords[i]);
       }
     }
 
     return results;
+  };
+
+  var currentWidget = "";
+  CodeMirror.setCurrentWidget = function(widget) {
+    for (var i = 0; i < widgets.length; i++) {
+      if(widget == widgets[i].name) currentWidget = widget;
+    }
+  };
+
+  CodeMirror.getCurrentWidget = function() {
+    return currentWidget;
+  };
+
+  CodeMirror.resourceImages = function() {
+    return resourceImages;
+  };
+
+  var resourceImages = [];
+
+  var widgets = [
+  { "name":"ActivityIndicator",
+    "properties": [
+      { "name":"inProgress", "values": ["true","false"] }
+    ]
+  },
+  { "name":"Button",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"textVerticalAlignment", "values": ["top","center","bottom"] },
+      { "name":"textHorizontalAlignment", "values": ["left","center","right"] },
+      { "name":"fontColor", "values": ["#AABBCC"] },
+      { "name":"fontSize", "values": ["12"] },
+      { "name":"fontHandle(notworking?)", "values": [] }
+    ]
+  },
+  { "name":"CameraPreview",
+    "properties": []
+  },
+  { "name":"CheckBox",
+    "properties": [
+      { "name":"checked", "values": ["true","false"] }
+    ]
+  },
+  { "name":"DatePicker",
+    "properties": [
+      { "name":"maxDate", "values": [(new Date()).getTime().toString()] },
+      { "name":"minDate", "values": [(new Date()).getTime().toString()] },
+      { "name":"year", "values": ["2000"] },
+      { "name":"month", "values": ["1"] },
+      { "name":"dayOfMonth", "values": ["1"] }
+    ]
+  },
+  { "name":"EditBox",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"placeholder", "values": ["text"] },
+      { "name":"showKeyboard", "values": ["true","false"] },
+      { "name":"editMode", "values": ["text","password"] },
+      { "name":"inputMode", "values": ["0","1","2","3","4","5","6"] },
+      { "name":"fontColor", "values": ["#000000"] },
+      { "name":"linesNumber", "values": [] },
+      { "name":"maxLines", "values": [] },
+      { "name":"minLines", "values": [] },
+      { "name":"maxLength", "values": [] },
+      { "name":"placeholderFontColor", "values": ["#000000"] }
+    ]
+  },
+  { "name":"GL2View",
+    "properties": []
+  },
+  { "name":"GLView",
+    "properties": [
+      { "name":"invalidate", "values": [] },
+      { "name":"bind", "values": [] }
+    ]
+  },
+  { "name":"HorizontalLayout",
+    "properties": [
+      { "name":"childVerticalAlignment", "values": ["top","center","bottom"] },
+      { "name":"childHorizontalAlignment", "values": ["left","center","right"] },
+      { "name":"paddingTop", "values": ["0"] },
+      { "name":"paddingLeft", "values": ["0"] },
+      { "name":"paddingRight", "values": ["0"] },
+      { "name":"paddingBottom", "values": ["0"] }
+    ]
+  },
+  { "name":"Image",
+    "properties": [
+      { "name":"image", "values": resourceImages },
+      { "name":"scaleMode", "values": ["none","scaleXY","scalePreserveAspect"] }
+    ]
+  },
+  { "name":"ImageButton",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"textVerticalAlignment", "values": ["top","center","right"] },
+      { "name":"textHorizontalAlignment", "values": ["left","center","right"] },
+      { "name":"fontColor", "values": ["#000000"] },
+      { "name":"fontSize", "values": [] },
+      { "name":"backgroundImage", "values": resourceImages },
+      { "name":"image", "values": resourceImages },
+      { "name":"fontHandle", "values": [] }
+    ]
+  },
+  { "name":"Label",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"textVerticalAlignment", "values": ["top","center","right"] },
+      { "name":"textHorizontalAlignment", "values": ["left","center","right"] },
+      { "name":"fontColor", "values": ["#000000"] },
+      { "name":"fontSize", "values": [] },
+      { "name":"fontHandle", "values": [] },
+      { "name":"maxNumberOfLines", "values": [] }
+    ]
+  },
+  { "name":"ListView",
+    "properties": []
+  },
+  { "name":"ListViewItem",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"icon", "values": resourceImages },
+      { "name":"accessoryType", "values": ["0","1","2","3"] },
+      { "name":"fontColor", "values": ["#000000"] },
+      { "name":"fontSize", "values": [] },
+      { "name":"fontHandle", "values": [] }
+    ]
+  },
+  { "name":"ModalDialog",
+    "properties": [
+      { "name":"title", "values": ["title"] },
+      { "name":"arrowPosition", "values": ["1","2","4","8","15"] },
+      { "name":"userCanDismiss", "values": ["true","false"] }
+    ]
+  },
+  { "name":"NavBar",
+    "properties": [
+      { "name":"title", "values": ["title"] },
+      { "name":"backBtn", "values": ["text"] },
+      { "name":"titleFontColor", "values": ["#AAAAAA"] },
+      { "name":"titleFontSize", "values": [] },
+      { "name":"titleFontHandle", "values": [] }
+    ]
+  },
+  { "name":"NumberPicker",
+    "properties": [
+      { "name":"value", "values": [] },
+      { "name":"minValue", "values": [] },
+      { "name":"maxValue", "values": [] }
+    ]
+  },
+  { "name":"PanoramaView",
+    "properties": [
+      { "name":"currentScreen", "values": [] },
+      { "name":"backgroundImage", "values": resourceImages },
+      { "name":"title", "values": ["title"] }
+    ]
+  },
+  { "name":"ProgressBar",
+    "properties": [
+      { "name":"max", "values": [] },
+      { "name":"progress", "values": [] },
+      { "name":"incrementProgress", "values": [] }
+    ]
+  },
+  { "name":"RelativeLayout",
+    "properties": []
+  },
+  { "name":"Screen",
+    "properties": [
+      { "name":"title", "values": ["title"] },
+      { "name":"icon", "values": resourceImages }
+    ]
+  },
+  { "name":"SearchBar",
+    "properties": [
+      { "name":"text", "values": ["text"] },
+      { "name":"placeholder", "values": [] },
+      { "name":"showKeyboard", "values": ["true","false"] }
+    ]
+  },
+  { "name":"Slider",
+    "properties": [
+      { "name":"max", "values": [] },
+      { "name":"value", "values": [] },
+      { "name":"increaseValue", "values": [] },
+      { "name":"decreaseValue", "values": [] }
+    ]
+  },
+  { "name":"StackScreen",
+    "properties": [
+      { "name":"backButtonEnabled", "values": ["true","false"] },
+      { "name":"title", "values": ["title"] },
+      { "name":"icon", "values": resourceImages }
+    ]
+  },
+  { "name":"TabScreen",
+    "properties": [
+      { "name":"currentTab", "values": [] },
+      { "name":"title", "values": [] },
+      { "name":"icon", "values": resourceImages },
+      { "name":"icon_android", "values": resourceImages },
+      { "name":"icon_iOS", "values": resourceImages }
+    ]
+  },
+  { "name":"TimePicker",
+    "properties": [
+      { "name":"currentHour", "values": [] },
+      { "name":"currentMinute", "values": [] }
+    ]
+  },
+  { "name":"ToggleButton",
+    "properties": [
+      { "name":"checked", "values": ["true","false"] }
+    ]
+  },
+  { "name":"VerticalLayout",
+    "properties": [
+      { "name":"childVerticalAlignment", "values": ["top","center","bottom"] },
+      { "name":"childHorizontalAlignment", "values": ["left","center","right"] },
+      { "name":"paddingTop", "values": [] },
+      { "name":"paddingLeft", "values": [] },
+      { "name":"paddingRight", "values": [] },
+      { "name":"paddingBottom", "values": [] }
+    ]
+  },
+  { "name":"VideoView",
+    "properties": [
+      { "name":"path", "values": [] },
+      { "name":"url", "values": [] },
+      { "name":"action", "values": [] },
+      { "name":"seekTo", "values": [] },
+      { "name":"duration", "values": [] },
+      { "name":"bufferPercentage", "values": [] },
+      { "name":"currentPosition", "values": [] },
+      { "name":"control", "values": [] }
+    ]
+  },
+  { "name":"WebView",
+    "properties": [
+      { "name":"url", "values": [] },
+      { "name":"html", "values": [] },
+      { "name":"baseUrl", "values": [] },
+      { "name":"softHook", "values": [] },
+      { "name":"hardHook", "values": [] },
+      { "name":"newurl", "values": [] },
+      { "name":"horizontalScrollBarEnabled", "values": ["true","false"] },
+      { "name":"verticalScrollBarEnabled", "values": ["true","false"] },
+      { "name":"enableZoom", "values": ["true","false"] },
+      { "name":"navigate", "values": ["back","forward"] }
+    ]
+  }
+];
+
+  var generalPropertiesWidget = [
+    'left',
+    'top',
+    'width',
+    'height',
+    'alpha',
+    'backgroundColor',
+    'visible',
+    'enabled',
+    'backgroundGradient'
+  ];
+
+  widgetsName = function() {
+    var names = [];
+    for (var i = 0; i < widgets.length; i++) {
+      names.push(widgets[i].name);
+    }
+    return names;
   };
 
   var htmlStructure = [
@@ -241,8 +613,7 @@
     {tag: 'dfn', attr: []},
     {tag: 'dir', attr: []},
     {tag: 'div', attr: [
-      {key: 'data-widgetType', values: ["Image"]},
-      {key: 'image', values: ["cat.jpg"]},
+      {key:'data-widgetType', values: widgetsName()},
       {key: 'id', values: []},
       {key: 'class', values: []},
       {key: 'style', values: []}
@@ -577,6 +948,10 @@
 
   CodeMirror.htmlStructure = function() {
     return htmlStructure;
+  };
+
+  CodeMirror.widgets = function() {
+    return widgets;
   };
 
   CodeMirror.htmlHint = function(editor) {

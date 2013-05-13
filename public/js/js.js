@@ -23,18 +23,24 @@
   //
   // Load resources for autocompletion
   // 
-  var res = $.grep(CodeMirror.htmlStructure(), function(e) {
-    return e.tag == 'div';
-  });
-  var image = $.grep(res[0].attr, function(e) {
-    return e.key == 'image';
-  });
   socket.emit('getListResources');
   socket.on('listResources', function(resources) {
     for (var i = 0; i < resources.length; i++) {
-      image[0].values.push(resources[i]);
+      CodeMirror.resourceImages().push('resources/' + resources[i]);
+      // image.values.push('resources/' + resources[i]);
+      // icon.values.push('resources/' + resources[i]);
+      // icon_android.values.push('resources/' + resources[i]);
+      // icon_ios.values.push('resources/' + resources[i]);
     }
-    console.log('Loaded resources: '+ image[0].values);
+    console.log('Loaded resources: '+ CodeMirror.resourceImages());
+  });
+
+  //-------------------------------------------------------
+  //
+  // Log error from web view on mobile device in browser app
+  // 
+  socket.on('evalError', function(message) {
+    console.log("Mobile device error:", message);
   });
 
 
@@ -47,6 +53,26 @@
     codemirror.setSocket(socket);
     var htmlCodeMirror = codemirror.initHtmlCodeMirror();
     var jsCodeMirror = codemirror.initJSCodeMirror();
+
+    numberPicker.numberPicker(htmlCodeMirror, $('#inletSliderHtml'));
+    numberPicker.numberPicker(jsCodeMirror, $('#inletSliderJS'));
+
+    //-------------------------------------------------------
+    //
+    // Set up templates dropdown
+    // 
+    $('#nativeTemplate').click(function(e) {
+      e.preventDefault();
+      htmlCodeMirror.setValue(nativeHtmlTemplate);
+      jsCodeMirror.setValue(nativeJavaScriptTemplate);
+    });
+    $('#webTemplate').click(function(e) {
+      e.preventDefault();
+    });
+    $('#acTemplate').click(function(e) {
+      e.preventDefault();
+      jsCodeMirror.setValue(autocompletetestTemplate);
+    });
 
     //-------------------------------------------------------
     //
@@ -298,6 +324,14 @@
 
     //-------------------------------------------------------
     //
+    // Get a confirmation that the gist file was saved
+    // 
+    socket.on('fileSaved', function() {
+      showMessageFileSaved();
+    });
+
+    //-------------------------------------------------------
+    //
     // Called when 'New HTML File...' is called
     // 
     $(document).on('click', '#newHtmlFile', function(e) {
@@ -479,6 +513,15 @@
 
     //-------------------------------------------------------
     //
+    // Avoid jumping to top of the document when clicking
+    // on collapsible links
+    //
+    $('.collapsibleLink').click(function(e) {
+      e.preventDefault();
+    });
+
+    //-------------------------------------------------------
+    //
     // Tells the server to reset the webview in the mobile app
     //
     $('#reset').click(function() {
@@ -516,4 +559,33 @@
     */
 
   }); // end on load of page
+
+
+  //-------------------------------------------------------
+  //
+  // UglifyJS
+  //
+  // var code = 'var widgetButton = mosync.nativeui.create("Button", "myButton", { "text" : "Click Me!", "width" : "FILL_AVAILABLE_SPACE" });'
+
+  var code = 'function one() {var a = 5; function two() {var b = 10;}} var miao;';
+  var toplevel_ast = UglifyJS.parse(code);
+  toplevel_ast.figure_out_scope();
+
+  // console.log('toplevel_ast:');
+  // console.log(toplevel_ast);
+
+  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.end);
+  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.expression.end);
+  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.expression.expression.end);
+
+  console.log(toplevel_ast);
+
+  //-------------------------------------------------------
+  //
+  // JSLint
+  //
+  JSLINT('function one() {var a = 5; function two() {var b = 10;}} var miao;');
+  data = JSLINT.data();
+  console.log(data);
+
 })();

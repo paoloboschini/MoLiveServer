@@ -27,6 +27,8 @@
 .CodeMirror-lint-span-error, .CodeMirror-lint-span-warning {
   background-position: left bottom;
   background-repeat: repeat-x;
+  margin-left: 0 !important;
+  float: none !important;
 }
 
 .CodeMirror-lint-span-error {

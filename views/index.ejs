@@ -39,6 +39,12 @@
   <script src='/codemirror-3.12/mode/javascript/javascript.js'></script>
   <script src='/codemirror-3.12/mode/css/css.js'></script>
 
+  <!-- Codemirror Linting -->
+  <link rel="stylesheet" href="/codemirror-3.12/addon/lint/lint.css">
+  <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
+  <script src="/codemirror-3.12/addon/lint/lint.js"></script>
+  <script src="/codemirror-3.12/addon/lint/javascript-lint.js"></script>
+
   <!-- 
   <script src='/js/Tangle.js'></script>
   <script type='text/javascript' src='/js/TangleKit/mootools.js'></script>
@@ -47,13 +53,28 @@
   <script type='text/javascript' src='/js/TangleKit/TangleKit.js'></script>
   -->
 
+  <script src="https://raw.github.com/fryn/html5slider/master/html5slider.js"></script>
+  <script src='/js/numberPicker.js'></script>
+  <script src='/js/jslint.js'></script>
+  <script src='/js/uglifyjs.js'></script>
+  <script src='/js/lodash.js'></script>
+  <script src='/js/wormhole.js'></script>
   <script src='/js/codemirror.js'></script>
   <script src='/js/gist.js'></script>
   <script src='/js/js.js'></script>
+  <script src='/js/templates.js'></script>
 </head>
 
 <!-- We could have an expert mode without hints, and a novice mode with hints and explanation of the code and basic programming. -->
 <body>
+
+  <div id="inletSliderHtml" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
+    <input class="range" type="range" id="numberPickerHtml">
+  </div>
+
+  <div id="inletSliderJS" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
+    <input class="range" type="range" id="numberPickerJS">
+  </div>
 
   <div id='header'>
     
@@ -89,20 +110,10 @@
 
   <div id='editors' style='height:500px;border:0px solid red;'>
     <div id='codeMirrorHtmlContainer'>
-      <textarea id='cmHtml' placeholder='Code goes here...
-
-You can start coding HTML in this area.
-Login to GitHub to get a list of you gists.
-If you want to save a file, either choose new file and star coding,
-or just start coding and save the code later.'></textarea>
+      <textarea id='cmHtml'></textarea>
     </div>
     <div id='codeMirrorJsContainer'>
-      <textarea id='cmJS' placeholder='Code goes here...
-
-You can start coding JavaScript in this area.
-Login to GitHub to get a list of you gists.
-If you want to save a file, either choose new file and star coding,
-or just start coding and save the code later.'></textarea>
+      <textarea id='cmJS'></textarea>
     </div>
   </div>
 

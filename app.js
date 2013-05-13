@@ -145,7 +145,9 @@ app.configure(function(){
 
   res.render('index.ejs', {
     title: 'Live!',
-    widgets: require('./widgets').widgets
+    widgets: require('./documentation/widgets').widgets,
+    jsEvents: require('./documentation/events').events,
+    jsMethods: require('./documentation/methods').methods
     // octocat: octocat
   });
 });
@@ -338,11 +340,16 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('webapp').emit('fileSaved', message);
   });
 
-  socket.on('getListResources', function(resources) {
-    io.sockets.in('mobile').emit('getListResources', resources);
+  socket.on('getListResources', function() {
+    io.sockets.in('mobile').emit('getListResources');
   });
 
   socket.on('listResources', function(resources) {
     io.sockets.in('webapp').emit('listResources', resources);
   });
-});
+
+  socket.on('evalError', function(message) {
+    io.sockets.in('webapp').emit('evalError', message);
+  });
+
+}); // io connection

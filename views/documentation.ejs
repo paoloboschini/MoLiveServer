@@ -7,83 +7,178 @@
   </div>
 </div>
 
-<h1><a href='#' data-toggle='collapse' data-target='#htmlContainer'>HTML</a></h1>
+<!-- HTML Documentation -->
+<h1 style="background:#8A5D67;"><a class="collapsibleLink" href='#' data-toggle='collapse' data-target='#htmlContainer'>HTML Widgets Markup</a></h1>
 <div id='htmlContainer' class="collapse in">
-<div style='width:50%;float:left;'>
-  <div class='accordion' id='widgets'>
-    <% for(var i = 0; i < widgets.length/2; ++i) { %>
-      <% var widget = widgets[i]; %>
-      <div class='accordion-group' style='margin:10px;'>
-        <div class='accordion-heading'>
-          <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#widgets' href='#<%= widget.name %>'>
-            <%= widget.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widget.description %></span>
-          </a>
-        </div>
-        <div id='<%= widget.name %>' class='accordion-body collapse in widget'>
-          <div class='accordion-inner' style='border:0px;'>
-            <% if(widget.hasOwnProperty('properties')) { %>
-              <ul>
-              <% for(var j = 0; j < widget.properties.length; ++j) { %>
-                <li>
-                  <%= widget.properties[j][0] + ': ' + widget.properties[j][1]%>
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='widgets'>
+      <% for(var i = 0; i < Math.ceil(widgets.length/2); ++i) { %>
+        <% var widget = widgets[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#widgets' href='#<%= widget.name %>'>
+              <%= widget.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widget.description %></span>
+            </a>
+          </div>
+          <div id='<%= widget.name %>' class='accordion-body collapse in widget'>
+            <div class='accordion-inner' style='border:0px;'>
+              <% if(widget.hasOwnProperty('properties')) { %>
+                <ul>
+                <% for(var j = 0; j < widget.properties.length; ++j) { %>
+                  <li>
+                    <%= widget.properties[j][0] + ': ' + widget.properties[j][1]%>
 
-                  <% if(widget.properties[j][2]) { %>
-                    <br />Values:
-                    <ul>
-                      <% for(var k = 0; k < widget.properties[j][2].length; ++k) { %>
-                        <li><%= widget.properties[j][2][k] %></li>
-                      <% } %>
-                    </ul>
-                  <% } %>
+                    <% if(widget.properties[j][2]) { %>
+                      <br />Values:
+                      <ul>
+                        <% for(var k = 0; k < widget.properties[j][2].length; ++k) { %>
+                          <li><%= widget.properties[j][2][k] %></li>
+                        <% } %>
+                      </ul>
+                    <% } %>
 
-                </li>
-              <% } %> <!-- for j -->
-              </ul>
-            <% } %> <!-- widget.hasOwnProperty -->
+                  </li>
+                <% } %> <!-- for j -->
+                </ul>
+              <% } %> <!-- widget.hasOwnProperty -->
+            </div>
           </div>
         </div>
-      </div>
-    <% } %> <!-- for i -->
-  </div> <!-- accordion -->
-</div> <!-- div widgets left -->
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div widgets left -->
 
-<div style='width:50%;float:left;'>
-  <div class='accordion' id='widgets'>
-    <% for(var i = widgets.length/2; i < widgets.length; ++i) { %>
-      <% var widget = widgets[i]; %>
-      <div class='accordion-group' style='margin:10px;'>
-        <div class='accordion-heading'>
-          <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#widgets' href='#<%= widget.name %>'>
-            <%= widget.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widget.description %></span>
-          </a>
-        </div>
-        <div id='<%= widget.name %>' class='accordion-body collapse in widget'>
-          <div class='accordion-inner' style='border:0px;'>
-            <% if(widget.hasOwnProperty('properties')) { %>
-              <ul>
-              <% for(var j = 0; j < widget.properties.length; ++j) { %>
-                <li>
-                  <%= widget.properties[j][0] + ': ' + widget.properties[j][1]%>
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='widgets'>
+      <% for(var i = Math.floor(widgets.length/2)+1; i < widgets.length; ++i) { %>
+        <% var widget = widgets[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#widgets' href='#<%= widget.name %>'>
+              <%= widget.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= widget.description %></span>
+            </a>
+          </div>
+          <div id='<%= widget.name %>' class='accordion-body collapse in widget'>
+            <div class='accordion-inner' style='border:0px;'>
+              <% if(widget.hasOwnProperty('properties')) { %>
+                <ul>
+                <% for(var j = 0; j < widget.properties.length; ++j) { %>
+                  <li>
+                    <%= widget.properties[j][0] + ': ' + widget.properties[j][1]%>
 
-                  <% if(widget.properties[j][2]) { %>
-                    <br />Values:
-                    <ul>
-                      <% for(var k = 0; k < widget.properties[j][2].length; ++k) { %>
-                        <li><%= widget.properties[j][2][k] %></li>
-                      <% } %>
-                    </ul>
-                  <% } %>
+                    <% if(widget.properties[j][2]) { %>
+                      <br />Values:
+                      <ul>
+                        <% for(var k = 0; k < widget.properties[j][2].length; ++k) { %>
+                          <li><%= widget.properties[j][2][k] %></li>
+                        <% } %>
+                      </ul>
+                    <% } %>
 
-                </li>
-              <% } %> <!-- for j -->
-              </ul>
-            <% } %> <!-- widget.hasOwnProperty -->
+                  </li>
+                <% } %> <!-- for j -->
+                </ul>
+              <% } %> <!-- widget.hasOwnProperty -->
+            </div>
           </div>
         </div>
-      </div>
-    <% } %> <!-- for i -->
-  </div> <!-- accordion -->
-</div> <!-- div widgets left -->
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div widgets right -->
+</div> <!-- htmlContainer -->
 
-</div>
-<h1>JavaScript</h1>
+<!-- JavaScript Events Documentation -->
+<h1 style="background:#494E66;"><a class="collapsibleLink" href='#' data-toggle='collapse' data-target='#jsEventsContainer'>JavaScript Widgets Events</a></h1>
+<div id='jsEventsContainer' class="collapse in">
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='events'>
+      <% for(var i = 0; i < Math.ceil(jsEvents.length/2); ++i) { %>
+        <% var event = jsEvents[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'>
+              <%= event.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
+            </a>
+          </div>
+        </div>
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div events left -->
+
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='events'>
+      <% for(var i = Math.floor(jsEvents.length/2)+1; i < jsEvents.length; ++i) { %>
+        <% var event = jsEvents[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'>
+              <%= event.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
+            </a>
+          </div>
+        </div>
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div events right -->
+</div> <!-- jsEventsContainer -->
+
+<!-- JavaScript Methods Documentation -->
+<h1 style="background:#968D65;"><a class="collapsibleLink" href='#' data-toggle='collapse' data-target='#jsMethodsContainer'>JavaScript Widgets Methods</a></h1>
+<div id='jsMethodsContainer' class="collapse in">
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='methods'>
+      <% for(var i = 0; i < Math.ceil(jsMethods.length/2)+1; ++i) { %>
+        <% var method = jsMethods[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#methods' href='#<%= method.id %>'>
+              <%= method.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= method.description %></span>
+            </a>
+          </div>
+          <div id='<%= method.id %>' class='accordion-body collapse in widget'>
+            <div class='accordion-inner' style='border:0px;'>
+              <% if(method.hasOwnProperty('parameters')) { %>
+                <p>Parameters:</p>
+                <ul>
+                <% for(var j = 0; j < method.parameters.length; ++j) { %>
+                  <li>
+                    <%= method.parameters[j].name + ': ' + method.parameters[j].description %>
+                  </li>
+                <% } %> <!-- for j -->
+                </ul>
+              <% } %> <!-- widget.hasOwnProperty -->
+            </div>
+          </div>
+        </div>
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div mathods left -->
+
+  <div style='width:50%;float:left;'>
+    <div class='accordion' id='events'>
+      <% for(var i = Math.ceil(jsMethods.length/2)+1; i < jsMethods.length; ++i) { %>
+        <% var method = jsMethods[i]; %>
+        <div class='accordion-group' style='margin:10px;'>
+          <div class='accordion-heading'>
+            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#methods' href='#<%= method.id %>'>
+              <%= method.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= method.description %></span>
+            </a>
+          </div>
+          <div id='<%= method.id %>' class='accordion-body collapse in widget'>
+            <div class='accordion-inner' style='border:0px;'>
+              <% if(method.hasOwnProperty('parameters')) { %>
+              <p>Parameters:</p>
+                <ul>
+                <% for(var j = 0; j < method.parameters.length; ++j) { %>
+                  <li>
+                    <%= method.parameters[j].name + ': ' + method.parameters[j].description %>
+                  </li>
+                <% } %> <!-- for j -->
+                </ul>
+              <% } %> <!-- widget.hasOwnProperty -->
+            </div>
+          </div>
+        </div>
+      <% } %> <!-- for i -->
+    </div> <!-- accordion -->
+  </div> <!-- div methods right -->
+</div> <!-- jsMethodsContainer -->

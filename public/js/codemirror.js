@@ -24,6 +24,7 @@ var codemirror = (function() {
       highlightSelectionMatches: true,
       // styleActiveLine: true,
       lineWrapping: true,
+      placeholder: 'HTML Code goes here...\n\nYou can start coding HTML in this area.\nLogin to GitHub to get a list of you gists.\nIf you want to save a file,\neither choose new file and start coding,\nor just start coding and save the code later.',
 
       // onKeyEvent: function(cm, s){ 
       //   if (s.type == 'keyup') { 
@@ -48,6 +49,7 @@ var codemirror = (function() {
       CodeMirror.showHint(cm, CodeMirror.htmlHint);
     };
 
+    codemirror.htmlCodeMirror = htmlCodeMirror;
     return htmlCodeMirror;
 
   }; // codemirrors.initHtmlCm
@@ -64,6 +66,9 @@ var codemirror = (function() {
       autoCloseBrackets: true,
       highlightSelectionMatches: true,
       extraKeys: {'Ctrl-Space': 'autocompleteJS'},
+      gutters: ["CodeMirror-lint-markers"],
+      lintWith: CodeMirror.javascriptValidator,
+      placeholder: 'JavaScript Code goes here...\n\nYou can start coding JavaScript in this area.\nLogin to GitHub to get a list of you gists.\nIf you want to save a file,\neither choose new file and start coding,\nor just start coding and save the code later.',
 
       // This, togheter with passAndHint, will trigger autocomplete at each keyup
       // onKeyEvent: function(cm, s){
@@ -89,6 +94,7 @@ var codemirror = (function() {
       CodeMirror.showHint(cm, CodeMirror.javascriptHint);
     };
 
+    codemirror.jsCodeMirror = jsCodeMirror;
     return jsCodeMirror;
 
   }; // codemirrors.initJsCm

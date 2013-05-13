@@ -1367,7 +1367,7 @@ document.addEventListener('DOMContentLoaded', function() {
 PhoneGap.m_document_addEventListener = document.addEventListener;
 document.addEventListener = function(evt, handler, capture)
 {
-    console.log("document.addEventListener event named " + evt);
+    // console.log("document.addEventListener event named " + evt);
 
     var e = evt.toLowerCase();
     if (e === 'deviceready')
@@ -1400,7 +1400,7 @@ document.addEventListener = function(evt, handler, capture)
 PhoneGap.m_document_removeEventListener = document.removeEventListener;
 document.removeEventListener = function(evt, handler, capture)
 {
-    console.log("document.removeEventListener event named " + evt);
+    // console.log("document.removeEventListener event named " + evt);
 
     var e = evt.toLowerCase();
 
@@ -9249,6 +9249,7 @@ mosync.resource.imageLoaded = function(imageID, imageHandle)
  */
 mosync.resource.loadRemoteImage = function(imageURL, imageID, callBackFunction)
 {
+	console.log('mosync.resource.loadRemoteImage');
 	mosync.resource.imageCallBackTable[imageID] = callBackFunction;
 	var message = [
 		"Resource",
@@ -9280,6 +9281,24 @@ mosync.resource.imageDownloadFinished = function(imageHandle)
 		// Call the function.
 		callbackFun(imageID, imageHandle);
 	}
+	// Remove first message.
+	if (mosync.resource.imageDownloadQueue.length > 0)
+	{
+		mosync.resource.imageDownloadQueue.shift();
+	}
+
+	// If there are more messages, send the next
+	// message in the queue.
+	if (mosync.resource.imageDownloadQueue.length > 0)
+	{
+		mosync.bridge.send(
+			mosync.resource.imageDownloadQueue[0],
+			null);
+	}
+};
+
+mosync.resource.imageDownloadError = function()
+{
 	// Remove first message.
 	if (mosync.resource.imageDownloadQueue.length > 0)
 	{
@@ -10957,11 +10976,17 @@ mosync.nativeui.createWidget = function(widget, parent) {
 			var thisWidget = document.getNativeElementById(widgetID);
 			mosync.nativeui.numWidgetsRequested--;
 			if (imageResources != null) {
-				mosync.resource.loadImage(imageResources.value,
-						widgetID + "image",
-						function(imageID, imageHandle) {
-							thisWidget.setProperty(imageResources.propertyType, imageHandle, null, null);
-						});
+				
+				// handles remote image if imageResources.value starts with http://
+				if (imageResources.value.indexOf('http://') !== -1) {
+					mosync.resource.loadRemoteImage(imageResources.value, widgetID + "image", function(imageID, imageHandle) {
+								thisWidget.setProperty(imageResources.propertyType, imageHandle, null, null);
+					});
+				} else {
+					mosync.resource.loadImage(imageResources.value, widgetID + "image", function(imageID, imageHandle) {
+								thisWidget.setProperty(imageResources.propertyType, imageHandle, null, null);
+					});					
+				}
 			}
 			if (eventList != null) {
 				thisWidget.addEventListener(eventList.type,
@@ -11027,7 +11052,6 @@ mosync.nativeui.createChildren = function(parent, widget) {
  * @private
  */
 mosync.nativeui.CheckUIStatus = function() {
-  console.log("mosync.nativeui.numWidgetsRequested: " + mosync.nativeui.numWidgetsRequested);
 	if (0 == mosync.nativeui.numWidgetsRequested) {
 		window.clearInterval(mosync.nativeui.showInterval);
 		mosync.nativeui.UIReady();
@@ -11073,22 +11097,16 @@ mosync.nativeui.showScreen = function(screenID) {
  */
 mosync.nativeui.initUI = function() {
 	var MoSyncDiv = document.getElementById("NativeUI");
-  console.log("mosync.nativeui.initUI0");
 	if (!MoSyncDiv) {
 		// TODO: Add log error message.
-    console.log("mosync.nativeui.initUI1");
 		return false;
 	}
-  console.log("mosync.nativeui.initUI2");
 	MoSyncDiv.style.display = "none"; //hide the Native Container
 	var MoSyncNodes = document.getElementById("NativeUI").childNodes;
 	if (!MoSyncNodes) {
 		// TODO: Add log error message.
-    console.log("mosync.nativeui.initUI3");
 		return false;
 	}
-
-  console.log("mosync.nativeui.initUI4");
 
 	for (var i = 1; i < MoSyncNodes.length; i++) {
 		if ((MoSyncNodes[i] != null) && (MoSyncNodes[i].tagName != undefined)) {
