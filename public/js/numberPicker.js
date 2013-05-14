@@ -57,6 +57,8 @@ var numberPicker = (function() {
 
     editor.on('focus', function(cm) {
       // console.log('focus!');
+      // $('#inletSliderHtml').css('visibility','hidden');
+      // $('#inletSliderJS').css('visibility','hidden');
       editor.on('cursorActivity', onCursorActivity);
     });
 
@@ -76,7 +78,7 @@ var numberPicker = (function() {
       var token = cm.getTokenAt(cur);
       var tokenAhead = cm.getTokenAt({line:cur.line, ch:cur.ch+1});
       token = token.type === null ? tokenAhead : token;
-      // console.log('token:', token);
+      console.log('token:', token);
 
       // adjust the sliderDiv position when element is hidden,
       // so that it won't move when sliding the slider
@@ -88,6 +90,11 @@ var numberPicker = (function() {
 
       // match any ints in the token string
       var string = token.string;
+      var hex = string.match(/#([A-Fa-f0-9]{6})/g);
+      if (hex !== null) {
+        return;
+      }
+
       var matches = string.match(/-?\d+/g), match;
       if (matches !== null) {
         match = matches[0];

@@ -1,0 +1,4 @@
+- Evaluated js on mobile sends catch errors to -> server -> web app console
+- Number picker on every token
+- Autocompletion on both editors, html multiline
+- 

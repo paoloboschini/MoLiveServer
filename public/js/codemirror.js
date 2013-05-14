@@ -113,7 +113,7 @@ var codemirror = (function() {
         }
 
         if (codeType == 'javascript') {
-          emitCode('html', htmlCodeMirror);
+          // emitCode('html', htmlCodeMirror);
           emitCode(codeType,editor);
         }
 

@@ -54,8 +54,15 @@
     var htmlCodeMirror = codemirror.initHtmlCodeMirror();
     var jsCodeMirror = codemirror.initJSCodeMirror();
 
+    //-------------------------------------------------------
+    //
+    // Set up number pickers
+    // 
     numberPicker.numberPicker(htmlCodeMirror, $('#inletSliderHtml'));
     numberPicker.numberPicker(jsCodeMirror, $('#inletSliderJS'));
+
+    colorPicker.colorPicker(htmlCodeMirror, 'htmlColorPicker');
+    colorPicker.colorPicker(jsCodeMirror, 'jsColorPicker');
 
     //-------------------------------------------------------
     //
@@ -567,7 +574,7 @@
   //
   // var code = 'var widgetButton = mosync.nativeui.create("Button", "myButton", { "text" : "Click Me!", "width" : "FILL_AVAILABLE_SPACE" });'
 
-  var code = 'function one() {var a = 5; function two() {var b = 10;}} var miao;';
+  var code = 'function one() {var a = 5; function two() {var b = 10;}} var miao; if(true) {console.log("hello");}';
   var toplevel_ast = UglifyJS.parse(code);
   toplevel_ast.figure_out_scope();
 
