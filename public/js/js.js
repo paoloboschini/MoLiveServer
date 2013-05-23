@@ -681,9 +681,13 @@
     // a feature so that the user can select e portion of the text and
     // execute it.
 
+    jsCodeMirror.on('cursorActivity', function(cm) {
+      updateParserHighlightWithLatency();
+    });
+
     var latencyFromLastPress = 100;
     var lastKeypress = null;
-    function updateParserHighlightDelay() {
+    function updateParserHighlightWithLatency() {
       lastKeypress = new Date().getTime();
       setTimeout(function() {
         var currentTime = new Date().getTime();
@@ -696,14 +700,9 @@
       }, latencyFromLastPress + 10);
     }
 
-    var marker = null;
-    jsCodeMirror.on('cursorActivity', function(cm) {
-      updateParserHighlightDelay();
-    });
-
     function updateParserHighlight() {
 
-      if (marker) marker.clear();
+      if (typeof(marker) != 'undefined') marker.clear();
 
       // get code from code mirror
       var code = jsCodeMirror.getValue();
@@ -862,7 +861,7 @@
       var end = jsCodeMirror.posFromIndex(node.end);
       console.log('start:', start);
       console.log('end:', end);
-      if (marker) marker.clear();
+      if (typeof(marker) != 'undefined') marker.clear();
       marker = jsCodeMirror.markText(start, end, {className: 'parserHighlight'});
       return jsCodeMirror.getRange(start, end);
     }
