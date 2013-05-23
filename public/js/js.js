@@ -685,6 +685,7 @@
       updateParserHighlightWithLatency();
     });
 
+    // asd
     var latencyFromLastPress = 100;
     var lastKeypress = null;
     function updateParserHighlightWithLatency() {
