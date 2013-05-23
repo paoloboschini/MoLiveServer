@@ -2,7 +2,7 @@
   function htmlHint(editor, htmlStructure, getToken) {
     var cur = editor.getCursor();
     var token = getToken(editor, cur);
-    console.log('token:', token);
+    // console.log('token:', token);
     var keywords = [];
     var i = 0;
     var j = 0;
@@ -12,23 +12,23 @@
     var flagClean = true;
 
     var text = editor.getRange({line: 0, ch: 0}, cur);
-    console.log('text:', text);
+    // console.log('text:', text);
 
     var open = text.lastIndexOf('<');
     var close = text.lastIndexOf('>');
     var tokenString = token.string.replace("<","");
-    console.log('tokenString:', tokenString);
+    // console.log('tokenString:', tokenString);
 
     // We enter in this branch if we are inside an unclosed tag
     if(open > close) {
-      console.log('if(open > close) {:');
+      // console.log('if(open > close) {:');
       var last = editor.getRange({line: cur.line, ch: cur.ch - 1}, cur);
-      console.log('last:', last);
+      // console.log('last:', last);
 
       // We enter this branch if we are just after a <, so give
       // us all tags
       if(last == "<") {
-        console.log('if(last == "<") {:');
+        // console.log('if(last == "<") {:');
         currentWidget = "";
         for(i = 0; i < htmlStructure.length; i++) {
           keywords.push(htmlStructure[i].tag);
@@ -52,22 +52,22 @@
               position.line = position.line-1;
             }
             var newToken = editor.getTokenAt(position);
-            console.log('newToken:', newToken);
+            // console.log('newToken:', newToken);
             return found(newToken, type, position);
           }
         };
 
         var nodeToken = found(token, "tag", {line: cur.line, ch: cur.ch});
-        console.log('counter:', counter);
-        console.log('nodeToken:', nodeToken);
-        console.log('tokens:', tokens);
+        // console.log('counter:', counter);
+        // console.log('nodeToken:', nodeToken);
+        // console.log('tokens:', tokens);
         var node = nodeToken.string.substring(1);
 
         var index = tokens.indexOf("data-widgetType")-2;
         if (index > 0) {
           var widgetOnLine = tokens[index].substr(1, tokens[index].length-2);
-          console.log('widgetOnLine:', widgetOnLine);
-          console.log('widgetsName():', widgetsName());
+          // console.log('widgetOnLine:', widgetOnLine);
+          // console.log('widgetsName():', widgetsName());
           if($.inArray(widgetOnLine, widgetsName()) != -1) {
             currentWidget = widgetOnLine;
           }
@@ -111,13 +111,13 @@
           var attributeToken = found(token, "attribute", {line: cur.line, ch: cur.ch});
           var attribute = attributeToken.string;
 
-          console.log('attribute:', attribute);
-          console.log('currentWidget:', currentWidget);
+          // console.log('attribute:', attribute);
+          // console.log('currentWidget:', currentWidget);
 
           // Add values of current attribute of current widget
           for (i = 0; i < widgets.length; i++) {
             if(widgets[i].name == currentWidget) {
-              console.log('widgets[i] == currentWidget', widgets[i], currentWidget);
+              // console.log('widgets[i] == currentWidget', widgets[i], currentWidget);
               for (j = 0; j < widgets[i].properties.length; j++) {
                 if(attribute == widgets[i].properties[j].name) {
                   for (k = 0; k < widgets[i].properties[j].values.length; k++) {
@@ -181,7 +181,7 @@
           }
         from.ch = token.start;
         } else if(token.type == "tag") {
-          console.log('} else if(token.type == "tag") {');
+          // console.log('} else if(token.type == "tag") {');
           for(i = 0; i < htmlStructure.length; i++) {
             keywords.push(htmlStructure[i].tag);
           }
@@ -190,7 +190,7 @@
         }
       }
     } else {
-      console.log('if(open < close) {:');
+      // console.log('if(open < close) {:');
 
       currentWidget = "";
 
@@ -217,7 +217,7 @@
 
 
   var cleanResults = function(text, keywords) {
-    console.log('cleanResults');
+    // console.log('cleanResults');
     var results = [];
     var i = 0;
 

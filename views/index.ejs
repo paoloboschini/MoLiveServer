@@ -13,7 +13,7 @@
   <link rel='stylesheet' href='/codemirror-3.12/theme/lesser-dark.css' />
   <link rel='stylesheet' href='/codemirror-3.12/theme/ambiance.css' />
   <link rel='stylesheet' href='/codemirror-3.12/addon/hint/show-hint.css' />
-  <link rel='stylesheet' href='/css/TangleKit.css' />
+  <!-- <link rel='stylesheet' href='/css/TangleKit.css' /> -->
   <link rel='stylesheet' href='/css/style.css' />
   <link rel='stylesheet' href='/css/Color.Picker.Classic.css' />
 
@@ -42,7 +42,7 @@
 
   <!-- Codemirror Linting -->
   <link rel="stylesheet" href="/codemirror-3.12/addon/lint/lint.css">
-  <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
+  <script src="/js/jshint.js"></script>
   <script src="/codemirror-3.12/addon/lint/lint.js"></script>
   <script src="/codemirror-3.12/addon/lint/javascript-lint.js"></script>
 
@@ -61,6 +61,8 @@
   <script src="/js/Color.Space.js" type="text/javascript"></script>
   <script src="/js/colorpicker.js" type="text/javascript"></script>
 
+  <script src='/js/acorn.js'></script>
+  <script src='/js/walk.js'></script>
   <script src='/js/jslint.js'></script>
   <script src='/js/uglifyjs.js'></script>
   <script src='/js/lodash.js'></script>
@@ -73,6 +75,10 @@
 
 <!-- We could have an expert mode without hints, and a novice mode with hints and explanation of the code and basic programming. -->
 <body>
+
+  <p id='column' style='position:absolute;right:10px;top:5px;text-align:right;color:white;'></p>
+  <p id='index' style='position:absolute;right:100px;top:5px;text-align:right;color:white;'></p>
+  <p id='mouse' style='position:absolute;right:200px;top:5px;text-align:right;color:white;'></p>
 
   <div id="inletSliderHtml" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
     <input class="range" type="range">
@@ -128,6 +134,15 @@
 
   <!-- Modals -->
   <% include modals %>
+
+  <!-- Used for Khan Academy Hack -->
+  <!-- <div style='display:none' id='sandboxCode'></div> -->
+
+  <ul id='runMenu' class='CodeMirror-hints' style='display:none;'>
+    <li class='CodeMirror-hint CodeMirror-hint-active'>Execute Code</li>
+  </ul>
+
+
 
 </body>
 </html>

@@ -9,7 +9,9 @@
   });
 
   socket.on('html', function(code) {
+    console.log('html code evaluated:');
     reset();
+    document.location.reload(true);
 
     // mosync = null;
 
@@ -21,12 +23,14 @@
 
   socket.on('javascript', function(code) {
     try {
+      console.log('Code evaluate on mobile:', code);
       eval(code);
     } catch(e) {
       // If the user changes something that generate an error,
       // we don't want to show an alert every time
       // alert('something went wrong with the js!');
-      socket.emit('evalError', e.message);
+      console.log('error catch mobile:', e);
+      // socket.emit('mobilelog', e.message);
     }
   });
 

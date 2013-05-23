@@ -11,7 +11,7 @@ var codemirror = (function() {
 
   codemirror.initHtmlCodeMirror = function() {
     htmlCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmHtml'), {
-      theme: 'ambiance',
+      // theme: 'ambiance',
       lineNumbers: true,
       tabSize: 2,
       mode: 'text/html',
@@ -44,6 +44,10 @@ var codemirror = (function() {
     }
 
     htmlCodeMirror.setSize('100%', '100%');
+    htmlCodeMirror.on('cursorActivity', function(cm) {
+      $('#column').html('col: ' + htmlCodeMirror.getCursor().ch);
+      $('#index').html('index: ' + htmlCodeMirror.indexFromPos(htmlCodeMirror.getCursor()));
+    });
     onChange(htmlCodeMirror, 'html', '#htmlToggleButton');
     CodeMirror.commands.autocompleteHtml = function(cm) {
       CodeMirror.showHint(cm, CodeMirror.htmlHint);
@@ -56,7 +60,7 @@ var codemirror = (function() {
 
   codemirror.initJSCodeMirror = function() {
     jsCodeMirror = CodeMirror.fromTextArea(document.getElementById('cmJS'), {
-      theme: 'ambiance',
+      // theme: 'ambiance',
       lineNumbers: true,
       matchBrackets: true,
       tabSize: 2,
@@ -89,6 +93,10 @@ var codemirror = (function() {
     }
 
     jsCodeMirror.setSize('100%', '100%');
+    jsCodeMirror.on('cursorActivity', function(cm) {
+      $('#column').html('col: ' + jsCodeMirror.getCursor().ch);
+      $('#index').html('index: ' + jsCodeMirror.indexFromPos(jsCodeMirror.getCursor()));
+    });
     onChange(jsCodeMirror, 'javascript', '#jsToggleButton');
     CodeMirror.commands.autocompleteJS = function(cm) {
       CodeMirror.showHint(cm, CodeMirror.javascriptHint);
@@ -107,13 +115,16 @@ var codemirror = (function() {
 
       if ($('#autoload').is(':checked')) {
 
+        JSHINT(jsCodeMirror.getValue());
+        if (JSHINT.data().errors) return;
+
         if (codeType == 'html') {
           emitCode(codeType,editor);
           emitCode('javascript', jsCodeMirror);
         }
 
         if (codeType == 'javascript') {
-          // emitCode('html', htmlCodeMirror);
+          emitCode('html', htmlCodeMirror);
           emitCode(codeType,editor);
         }
 
@@ -144,6 +155,7 @@ var codemirror = (function() {
     setTimeout(function() {
       var currentTime = new Date().getTime();
       if (currentTime - lastKeypress > latencyFromLastPress) {
+        console.log('CODE EMITTED');
         socket.emit(codeType, editor.getValue());
       }
     }, latencyFromLastPress + 10);

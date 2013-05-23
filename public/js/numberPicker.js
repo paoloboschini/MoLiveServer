@@ -2,7 +2,6 @@ var numberPicker = (function() {
 
   var numberPicker = {};
   numberPicker.numberPicker = function(editor, sliderDiv) {
-
     var widthSlider = sliderDiv.css('width');
 
     var slider = $(sliderDiv.children(":first")[0]);
@@ -78,7 +77,7 @@ var numberPicker = (function() {
       var token = cm.getTokenAt(cur);
       var tokenAhead = cm.getTokenAt({line:cur.line, ch:cur.ch+1});
       token = token.type === null ? tokenAhead : token;
-      console.log('token:', token);
+      // console.log('token:', token);
 
       // adjust the sliderDiv position when element is hidden,
       // so that it won't move when sliding the slider
@@ -121,7 +120,54 @@ var numberPicker = (function() {
         slider.val(50);
       }
     }
-  };
+
+    //-------------------------------------------------------
+    //
+    // Test mouse pointer over tokens, incomplete implementation
+    //
+    // document.addEventListener("mousemove", function(e) {
+    //   var x = e.pageX, y = e.pageY;
+    //   var localEditor;
+    //   var element = document.elementFromPoint(x, y);
+    //   $(element).parents().each(function(i, el) {
+    //     if (el.id == 'codeMirrorHtmlContainer') {
+    //       localEditor = codemirror.htmlCodeMirror;
+    //     }
+    //     if (el.id == 'codeMirrorJsContainer') {
+    //       localEditor = codemirror.jsCodeMirror;
+    //     }
+    //   });
+
+    //   var pos = localEditor.coordsChar({left: x, top: y});
+    //   $('#mouse').html('line: ' + pos.line + ', ch: ' + pos.ch);
+
+    //   var token = localEditor.getTokenAt(pos);
+    //   var tokenAhead = localEditor.getTokenAt({line:pos.line, ch:pos.ch+1});
+    //   token = token.type === null ? tokenAhead : token;
+    //   console.log('token:', token);
+
+    //   var string = token.string;
+    //   var matches = string.match(/-?\d+/g), match;
+    //   if (matches !== null) {
+    //     match = parseInt(match, 10);
+    //     tokenOriginalValue = parseInt(match, 10);
+
+    //     var startInt = string.indexOf(match);
+    //     var endInt = startInt + match.length;
+
+    //     // console.log('startInt:', startInt);
+    //     // console.log('endInt:', endInt);
+
+    //     startReplace = token.start + startInt;
+    //     endReplace = token.start + endInt;
+
+    //     element.style.cursor = 'col-resize';
+    //   } else {
+    //     element.style.cursor = 'default';
+    //   }
+    // }, false);
+
+  }; // numberPicker.numberPicker = function(editor, sliderDiv) {
 
   return numberPicker;
 

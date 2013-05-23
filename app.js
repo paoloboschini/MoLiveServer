@@ -331,7 +331,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('reset', function() {
     io.sockets.in('mobile').emit('reset');
   });
-  
+
   socket.on('downloadResource', function(data) {
     io.sockets.in('mobile').emit('downloadResource', data);
   });
@@ -348,8 +348,8 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('webapp').emit('listResources', resources);
   });
 
-  socket.on('evalError', function(message) {
-    io.sockets.in('webapp').emit('evalError', message);
+  socket.on('mobilelog', function(message) {
+    io.sockets.in('webapp').emit('mobilelog', message);
   });
 
 }); // io connection

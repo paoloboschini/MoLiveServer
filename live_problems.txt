@@ -1,0 +1,19 @@
+/**
+ * Case: We change something in the function f.
+ * We should then evaluate f() to propagate that
+ * change. The problem is that the program would
+ * never run f() since x != 0.
+ * Solution? Run all the program whenever we change
+ * the body of a function?
+ * 
+ */
+var x = 1;
+function f() {
+  $('#ciao')
+    .css('color','#36e809')
+    .css('fontSize','30');
+}
+
+if(x === 0) {
+  f();
+}

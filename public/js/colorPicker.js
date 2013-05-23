@@ -37,12 +37,12 @@ var colorPicker = (function() {
       var token = cm.getTokenAt(cur);
       var tokenAhead = cm.getTokenAt({line:cur.line, ch:cur.ch+1});
       token = token.type === null ? tokenAhead : token;
-      console.log('token:', token);
+      // console.log('token:', token);
 
       // match any ints in the token string
       var string = token.string;
       var matches = string.match(/#([A-Fa-f0-9]{6})/g), match;
-      console.log('matches:', matches);
+      // console.log('matches:', matches);
 
       if (matches !== null) {
         match = matches[0];

@@ -24,22 +24,22 @@
 
     token.state = CodeMirror.innerMode(editor.getMode(), token.state).state;
 
-    console.log('token:', token);
-    console.log('token.state:', token.state);
+    // console.log('token:', token);
+    // console.log('token.state:', token.state);
 
     // If it's not a 'word-style' token, ignore the token.
     if (!/^[\w$_]*$/.test(token.string)) {
-      console.log("not a 'word-style' token");
+      // console.log("not a 'word-style' token");
       token = tprop = {start: cur.ch, end: cur.ch, string: "", state: token.state,
                        type: token.string == "." ? "property" : null};
     }
     // If it is a property, find out what it is a property of.
     while (tprop.type == "property") {
       tprop = getToken(editor, Pos(cur.line, tprop.start));
-      console.log('1tprop:', tprop);
+      // console.log('1tprop:', tprop);
       if (tprop.string != ".") return;
       tprop = getToken(editor, Pos(cur.line, tprop.start));
-      console.log('2tprop:', tprop);
+      // console.log('2tprop:', tprop);
       if (tprop.string == ')') {
         var level = 1;
         do {
@@ -57,9 +57,9 @@
       }
       var context;
       if (!context) context = [];
-      console.log('3tprop:', tprop);
+      // console.log('3tprop:', tprop);
       context.push(tprop);
-      console.log('1context:', context[0]);
+      // console.log('1context:', context[0]);
     }
     return {list: getCompletions(token, context, keywords, options),
             from: Pos(cur.line, token.start),
@@ -112,13 +112,13 @@
                   "if in instanceof isnt new no not null of off on or return switch then throw true try typeof until void while with yes").split(" ");
 
   function getCompletions(token, context, keywords, options) {
-    console.log('context5:', context);
+    // console.log('context5:', context);
     var found = [], start = token.string;
     function maybeAdd(str) {
       if (str.indexOf(start) == 0 && !arrayContains(found, str)) found.push(str);
     }
     function gatherCompletions(obj) {
-      console.log('obj2:', obj);
+      // console.log('obj2:', obj);
       if (obj == "widget") forEach(widgetProps, maybeAdd);
       else if (typeof obj == "string") forEach(stringProps, maybeAdd);
       else if (obj instanceof Array) forEach(arrayProps, maybeAdd);
@@ -126,13 +126,13 @@
       // for (var name in obj) maybeAdd(name);
     }
 
-    console.log('2context:', context);
+    // console.log('2context:', context);
     if (context) {
-      console.log('3context:', context);
+      // console.log('3context:', context);
       // If this is a property, see if it belongs to some object we can
       // find in the current environment.
       var obj = context.pop(), base;
-      console.log('obj1:', obj);
+      // console.log('obj1:', obj);
       if (obj.type.indexOf("variable") === 0) {
         if (options && options.additionalContext)
           base = options.additionalContext[obj.string];
