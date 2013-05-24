@@ -61,9 +61,17 @@
     numberPicker.numberPicker(htmlCodeMirror, $('#inletSliderHtml'));
     numberPicker.numberPicker(jsCodeMirror, $('#inletSliderJS'));
 
+    //-------------------------------------------------------
+    //
+    // Set up color pickers
+    // 
     colorPicker.colorPicker(htmlCodeMirror, 'htmlColorPicker');
     colorPicker.colorPicker(jsCodeMirror, 'jsColorPicker');
 
+    //-------------------------------------------------------
+    //
+    // Updates mouse coordinates indicator on the top-right of the screen
+    // 
     document.addEventListener("mousemove", function(e) {
       var x = e.pageX, y = e.pageY;
       var posCharInEditor = jsCodeMirror.coordsChar({left: x, top: y});
@@ -260,86 +268,6 @@
       for (var i = 0; i < scripts.length; i++) {
         socket.emit('javascript', scripts[i].innerHTML);
       }
-
-      // Let's test the evaluation of change code
-      // Hack inspired by Khan Akademy
-      // Same as $('#jshint').click(function() {
-
-      // console.clear();
-      // JSHINT(jsCodeMirror.getValue());
-      // console.log('JSHINT.data():', JSHINT.data());
-      // var sandboxCode = document.getElementById('sandboxCode');
-      // sandboxCode.innerHTML = htmlCodeMirror.getValue();
-
-      // if(firsttime) {
-      //   firsttime = false;
-
-      //   // add global vars to the oldState obj with value
-      //   // undefined, then assign to each prop the actual
-      //   // value from the the code
-      //   for (var i = 0; i < JSHINT.data().globals.length; i++) {
-      //     oldState[JSHINT.data().globals[i]] = undefined;
-      //   }
-
-      //   eval(jsCodeMirror.getValue());
-
-      //   for(var v in oldState) {
-      //     var value = eval(v);
-      //     if (typeof(value) == 'object') {
-      //       console.log(Object.keys(value));
-      //       oldState[v] = JSON.stringify(value);
-      //     } else {
-      //       oldState[v] = value + '';
-      //     }
-      //   }
-
-      //   console.log('oldState:', oldState);
-
-      //   // send all code first time
-      //   socket.emit('javascript', jsCodeMirror.getValue());
-
-      // } else {
-      //   // eval and compare with old state
-      //   var grabAll = {};
-
-      //   for (var j = 0; j < JSHINT.data().globals.length; j++) {
-      //     grabAll[JSHINT.data().globals[j]] = undefined;
-      //   }
-
-      //   eval(jsCodeMirror.getValue());
-
-      //   for(var v in oldState) {
-      //     var value = eval(v);
-      //     if (typeof(value) == 'object') {
-      //       grabAll[v] = JSON.stringify(value);
-      //     } else {
-      //       grabAll[v] = value + '';
-      //     }
-      //   }
-
-      //   // TO DO: check for new globals by comparing the length
-      //   // of oldState and grabAll?
-
-      //   if (Object.keys(oldState).length == Object.keys(grabAll).length) {
-      //     for(var vvv in grabAll) {
-      //       if(grabAll[vvv] != oldState[vvv]) {
-      //         console.log('var ' + vvv + ' = ' + grabAll[vvv], 'This should be evalled');
-      //         // eval('var ' + vvv + ' = ' + grabAll[vvv]);
-
-      //         socket.emit('javascript', 'var ' + vvv + ' = ' + grabAll[vvv]);
-
-      //       }
-      //     }
-      //   }
-
-      //   // eval.call(window, jsCodeMirror.getValue());
-      //   console.log('JSHINT.data():', JSHINT.data());
-      //   console.log('oldState:', oldState);
-      //   console.log('grabAll:', grabAll);
-      //   oldState = grabAll;
-      //   console.log('oldState after assignment:', oldState);
-      // }
-
 
       // emit javascript from js codemirror
       var js = jsCodeMirror.getValue();
@@ -651,19 +579,6 @@
       $('#loadIndicator').css('background', '#003B80');
     }
 
-    /* Tangle for the delay
-        var rootElement = document.getElementById('delayLabel');
-        var model = {
-            initialize: function() {
-                this.delay = 500;
-            },
-            update: function() {
-                // this.delay = this.delay + 100;
-            }
-        };
-        var tangle = new Tangle(rootElement, model);
-    */
-
     //-------------------------------------------------------
     //
     // Acorn
@@ -685,7 +600,6 @@
       updateParserHighlightWithLatency();
     });
 
-    // asd
     var latencyFromLastPress = 100;
     var lastKeypress = null;
     function updateParserHighlightWithLatency() {
@@ -694,7 +608,6 @@
         var currentTime = new Date().getTime();
         if (currentTime - lastKeypress > latencyFromLastPress) {
           console.log('CURSOR ACTIVITY');
-          // clean console
           console.clear();
           updateParserHighlight();
         }
@@ -702,13 +615,10 @@
     }
 
     function updateParserHighlight() {
-
       if (typeof(marker) != 'undefined') marker.clear();
-
-      // get code from code mirror
       var code = jsCodeMirror.getValue();
 
-      // If there is an error, don't even continue parsing
+      // If there is an error, stop parsing
       JSHINT(code);
       var errors = JSHINT.data().errors;
       if (errors) return;

@@ -96,6 +96,15 @@ var codemirror = (function() {
     jsCodeMirror.on('cursorActivity', function(cm) {
       $('#column').html('col: ' + jsCodeMirror.getCursor().ch);
       $('#index').html('index: ' + jsCodeMirror.indexFromPos(jsCodeMirror.getCursor()));
+
+      // Enable or disable the run button after linting JavaScript
+      JSHINT(jsCodeMirror.getValue());
+      var errors = JSHINT.data().errors;
+      if (errors) {
+        $('#executecode').addClass('disabled');
+      } else {
+        $('#executecode').removeClass('disabled');
+      }
     });
     onChange(jsCodeMirror, 'javascript', '#jsToggleButton');
     CodeMirror.commands.autocompleteJS = function(cm) {
