@@ -107,6 +107,7 @@ var codemirror = (function() {
       }
     });
     onChange(jsCodeMirror, 'javascript', '#jsToggleButton');
+    onCursorActivity(jsCodeMirror);
     CodeMirror.commands.autocompleteJS = function(cm) {
       CodeMirror.showHint(cm, CodeMirror.javascriptHint);
     };
@@ -125,16 +126,21 @@ var codemirror = (function() {
       if ($('#autoload').is(':checked')) {
 
         JSHINT(jsCodeMirror.getValue());
-        if (JSHINT.data().errors) return;
+        var errors = JSHINT.data().errors;
 
         if (codeType == 'html') {
-          emitCode(codeType,editor);
-          emitCode('javascript', jsCodeMirror);
+          emitCode(codeType, editor, true);
+          if(typeof(errors) == 'undefined') {
+            emitCode('javascript', jsCodeMirror, true);
+          }
         }
 
         if (codeType == 'javascript') {
-          emitCode('html', htmlCodeMirror);
-          emitCode(codeType,editor);
+          // why do we need to run html if only JavaScript code is changed?
+          // emitCode('html', htmlCodeMirror);
+          if(typeof(errors) == 'undefined') {
+            emitCode(codeType, editor, false);
+          }
         }
 
       }
@@ -153,19 +159,106 @@ var codemirror = (function() {
     });
   }
 
+  //-------------------------------------------------------
+  //
+  // Acorn
+  // Rules: 1. If node is a program get the last statement/node
+  //        2. If node is a literal get the node around by passing
+  //           the (start of the literal node - 1) to find the VariableDeclaration
+  //        3. If node is a block, find the function declaration
+  //           togheter with the body. PROBLEM: when changing a 
+  //           function declaration we should execute all the calls
+  //           to that function!
+  //           
+  //
+  // Depending on where we are with the cursor we want to extract the
+  // surrounding statement to executing it, a la Smalltalk. Also, add
+  // a feature so that the user can select e portion of the text and
+  // execute it.
+  function onCursorActivity(cm) {
+    cm.on('cursorActivity', function(cm) {
+      if ($('#autoload').is(':checked')) {
+        updateParserHighlightWithLatency();
+      }
+    });
+  }
+
+  var latencyFromLastCursorActivity = 100;
+  function updateParserHighlightWithLatency() {
+    lastCursorActivity = new Date().getTime();
+    setTimeout(function() {
+      var currentTime = new Date().getTime();
+      if (currentTime - lastCursorActivity > latencyFromLastCursorActivity) {
+        highlightFirstLevelActiveNode();
+      }
+    }, latencyFromLastCursorActivity + 10);
+  }
+
+  function highlightFirstLevelActiveNode() {
+    if (typeof(marker) != 'undefined') marker.clear();
+    var node = firstLevelActiveNode();
+    if (typeof(node) != 'undefined') {
+      var start = node.start;
+      var end = node.end;
+      marker = jsCodeMirror.markText(start, end, {className: 'parserHighlight'});
+    }
+  }
+
+  function firstLevelActiveNode() {
+    var code = jsCodeMirror.getValue();
+
+    // If there is an error, stop parsing
+    JSHINT(code);
+    var errors = JSHINT.data().errors;
+    if (errors) return;
+
+    // parse the program to a node program
+    var program = acorn.parse(code, {locations: true, ranges: true});
+
+    // get the position of the cursor, specified as index(int) of
+    // the total characters from start to caret (and not as {line,ch})
+    var pos = jsCodeMirror.indexFromPos(jsCodeMirror.getCursor());
+    for (var i = 0; i < program.body.length; i++) {
+      var startIndexNode = program.body[i].start;
+      var endIndexNode = program.body[i].end;
+
+      if(program.body[i].type == 'VariableDeclaration') {
+        endIndexNode++;
+      }
+
+      var startNode = jsCodeMirror.posFromIndex(startIndexNode);
+      var endNode = jsCodeMirror.posFromIndex(endIndexNode);
+
+      if (pos >= startIndexNode && pos <= endIndexNode) {
+        return {
+          start: startNode,
+          end: endNode,
+          content: jsCodeMirror.getRange(startNode, endNode)
+        };
+      }
+    }
+  }
+
   /**
    * Emit code through the socket.
    * This function is bound to any change made to the code editors.
    */
   var latencyFromLastPress = 100;
-  var lastKeypress = null;
-  function emitCode(codeType, editor) {
+  function emitCode(codeType, editor, executeEverything) {
     lastKeypress = new Date().getTime();
     setTimeout(function() {
       var currentTime = new Date().getTime();
       if (currentTime - lastKeypress > latencyFromLastPress) {
-        console.log('CODE EMITTED');
-        socket.emit(codeType, editor.getValue());
+        if (codeType == 'javascript' && !executeEverything) {
+          console.log('is js and live');
+          var node = firstLevelActiveNode();
+          if (typeof(node) != 'undefined') {
+            socket.emit(codeType, node.content);
+          }
+        } else {
+          console.log('is not live');
+          socket.emit(codeType, editor.getValue());
+        }
       }
     }, latencyFromLastPress + 10);
   }

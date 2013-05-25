@@ -80,24 +80,6 @@
 
     //-------------------------------------------------------
     //
-    // Set up right click for execute code
-    // 
-    document.addEventListener('contextmenu', function(ev) {
-      ev.preventDefault();
-      if(jsCodeMirror.somethingSelected()) {
-        $('#runMenu').css('top', ev.y).css('left', ev.x).css('display','inline');
-      }
-      return false;
-    }, false);
-    jsCodeMirror.on("focus", function() {
-      $('#runMenu').css('display','none');
-    });
-    $('#runMenu').on('click', function(e) {
-      $(this).css('display','none');
-    });
-
-    //-------------------------------------------------------
-    //
     // Set up templates dropdown
     // 
     $('#nativeTemplate').click(function(e) {
@@ -107,6 +89,8 @@
     });
     $('#webTemplate').click(function(e) {
       e.preventDefault();
+      htmlCodeMirror.setValue(webHtmlTemplate);
+      jsCodeMirror.setValue(webJavaScriptTemplate);
     });
     $('#acTemplate').click(function(e) {
       e.preventDefault();
@@ -249,32 +233,33 @@
 
     //-------------------------------------------------------
     //
-    // When the Run button is clicked, send the code to the
+    // When the Restart button is clicked, send the code to the
     // server (the server will send it to the mobile)
     // 
-    var firsttime = true;
-    var oldState = {};
     $('#executecode').click(function() {
       var html = htmlCodeMirror.getValue();
+      socket.emit('html', html);
 
-      // get html without embedded javascript and emit
-      var htmlWithoutScripts = stripScripts(html);
-      socket.emit('html', htmlWithoutScripts);
+      // // get html without embedded javascript and emit
+      // var htmlWithoutScripts = stripScripts(html);
+      // socket.emit('html', htmlWithoutScripts);
 
-      // extract embedded javascript scripts from html
-      // and emit as javascript
-      var doc = htmlCodeMirror.getValue();
-      var scripts = $(doc).filter('script');
-      for (var i = 0; i < scripts.length; i++) {
-        socket.emit('javascript', scripts[i].innerHTML);
-      }
+      // // extract embedded javascript scripts from html
+      // // and emit as javascript
+      // var doc = htmlCodeMirror.getValue();
+      // var scripts = $(doc).filter('script');
+      // for (var i = 0; i < scripts.length; i++) {
+      //   socket.emit('javascript', scripts[i].innerHTML);
+      // }
 
       // emit javascript from js codemirror
       var js = jsCodeMirror.getValue();
       socket.emit('javascript', js);
 
       /**
-       * Remove embedded javascript scripts from html
+       * Removes embedded javascript scripts from html.
+       * For some obscure reason, the doctype tag and the head
+       * tag are removed also from the html, this is wrong.
        * @param  s html string
        * @return html string without embedded javascript
        */
@@ -292,6 +277,31 @@
       // this will compress the code, i.e. remove extra spaces and returns
       // code = code.replace(/(\r\n|\n|\r|\t)/gm,'');
       // code = code.replace(/\s+/g,' ');
+    });
+
+    var currentScrollPos;
+    $(window).scroll(function () {
+      currentScrollPos = document.body.scrollTop;
+    });
+
+    //-------------------------------------------------------
+    //
+    // Set up right click for execute code
+    // 
+    document.addEventListener('contextmenu', function(ev) {
+      ev.preventDefault();
+      if(jsCodeMirror.somethingSelected()) {
+        $('#runMenu').css('top', ev.pageY+'px').css('left', ev.pageX+'px').css('display','block');
+      }
+      document.body.scrollTop = currentScrollPos;
+      return false;
+    }, false);
+    jsCodeMirror.on("focus", function() {
+      $('#runMenu').css('display','none');
+    });
+    $('#runMenu').on('click', function(e) {
+      socket.emit('javascript', jsCodeMirror.getSelection());
+      $(this).css('display','none');
     });
 
     //-------------------------------------------------------
@@ -578,98 +588,5 @@
     function hideLoadIndicator() {
       $('#loadIndicator').css('background', '#003B80');
     }
-
-    //-------------------------------------------------------
-    //
-    // Acorn
-    // Rules: 1. If node is a program get the last statement/node
-    //        2. If node is a literal get the node around by passing
-    //           the (start of the literal node - 1) to find the VariableDeclaration
-    //        3. If node is a block, find the function declaration
-    //           togheter with the body. PROBLEM: when changing a 
-    //           function declaration we should execute all the calls
-    //           to that function!
-    //           
-    //
-    // Depending on where we are with the cursor we want to extract the
-    // surrounding statement to executing it, a la Smalltalk. Also, add
-    // a feature so that the user can select e portion of the text and
-    // execute it.
-    jsCodeMirror.on('cursorActivity', function(cm) {
-      updateParserHighlightWithLatency();
-    });
-
-    var latencyFromLastPress = 100;
-    var lastKeypress = null;
-    function updateParserHighlightWithLatency() {
-      lastKeypress = new Date().getTime();
-      setTimeout(function() {
-        var currentTime = new Date().getTime();
-        if (currentTime - lastKeypress > latencyFromLastPress) {
-          console.log('CURSOR ACTIVITY');
-          console.clear();
-          updateParserHighlight();
-        }
-      }, latencyFromLastPress + 10);
-    }
-
-    function updateParserHighlight() {
-      if (typeof(marker) != 'undefined') marker.clear();
-      var code = jsCodeMirror.getValue();
-
-      // If there is an error, stop parsing
-      JSHINT(code);
-      var errors = JSHINT.data().errors;
-      if (errors) return;
-
-      // parse the program to a node program
-      var program = acorn.parse(code, {locations: true, ranges: true});
-      console.log('program:', program, '\n');
-
-      // get the position of the cursor, specified as index(int) of
-      // the total characters from start to caret (and not as {line,ch})
-      var pos = jsCodeMirror.indexFromPos(jsCodeMirror.getCursor());
-      for (var i = 0; i < program.body.length; i++) {
-        var startIndexNode = program.body[i].start;
-        var endIndexNode = program.body[i].end;
-        var startNode = jsCodeMirror.posFromIndex(startIndexNode);
-        var endNode = jsCodeMirror.posFromIndex(endIndexNode);
-        if (pos >= startIndexNode && pos <= endIndexNode) {
-          if (typeof(marker) != 'undefined') marker.clear();
-          marker = jsCodeMirror.markText(startNode, endNode, {className: 'parserHighlight'});
-        }
-      }
-    } // jsCodeMirror.on('cursorActivity', function(cm) {
-
   }); // end on load of page
-
-
-  //-------------------------------------------------------
-  //
-  // UglifyJS
-  //
-  // var code = 'var widgetButton = mosync.nativeui.create("Button", "myButton", { "text" : "Click Me!", "width" : "FILL_AVAILABLE_SPACE" });'
-
-  // var code = 'function one() {var a = 5; function two() {var b = 10;}} var miao; if(true) {console.log("hello");}';
-  // var toplevel_ast = UglifyJS.parse(code);
-  // toplevel_ast.figure_out_scope();
-
-  // console.log('toplevel_ast:');
-  // console.log(toplevel_ast);
-
-  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.end);
-  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.expression.end);
-  // console.log(toplevel_ast.variables._values.$widgetButton.init.expression.expression.expression.end);
-
-  // console.log(toplevel_ast);
-
-  //-------------------------------------------------------
-  //
-  // JSLint
-  //
-  // JSLINT('function one() {var a = 5; function two() {var b = 10;}} var miao;');
-  // data = JSLINT.data();
-  // console.log(data);
-  // console.log(JSLINT.report(data));
-
 })();

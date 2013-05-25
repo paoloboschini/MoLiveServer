@@ -9,7 +9,7 @@
   });
 
   socket.on('html', function(code) {
-    console.log('html code evaluated:');
+    console.log('html code evaluated:', code);
     reset();
     document.location.reload(true);
 
@@ -24,13 +24,14 @@
   socket.on('javascript', function(code) {
     try {
       console.log('Code evaluate on mobile:', code);
-      eval(code);
+      // execute eval in the global scope
+      eval.call(window, code);
     } catch(e) {
       // If the user changes something that generate an error,
       // we don't want to show an alert every time
       // alert('something went wrong with the js!');
       console.log('error catch mobile:', e);
-      // socket.emit('mobilelog', e.message);
+      socket.emit('mobilelog', e.message);
     }
   });
 
