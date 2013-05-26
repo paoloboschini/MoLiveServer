@@ -5,24 +5,21 @@
 
   <link rel='stylesheet' href='/css/jquery/smoothness/jquery-ui.css' />
   <link rel='stylesheet' href='/css/bootstrap/bootstrap.css' />
-  <link rel='stylesheet' href='/css/bootstrap/bootstrap-responsive.css' rel='stylesheet' />
-  <link rel='stylesheet' href='/css/bootstrap/bootstrap-fileupload.min.css' rel='stylesheet' />
-  <link rel='stylesheet' href='/FontAwesome/css/font-awesome.min.css' />
+  <link rel='stylesheet' href='/css/bootstrap/bootstrap-responsive.css'/>
+  <link rel='stylesheet' href='/css/bootstrap/bootstrap-fileupload.min.css' />
+  <link rel='stylesheet' href='/css/FontAwesome/css/font-awesome.min.css' />
   <link rel='stylesheet' href='/codemirror-3.12/lib/codemirror.css' />
-  <link rel='stylesheet' href='/codemirror-3.12/theme/erlang-dark.css' />
-  <link rel='stylesheet' href='/codemirror-3.12/theme/lesser-dark.css' />
-  <link rel='stylesheet' href='/codemirror-3.12/theme/ambiance.css' />
   <link rel='stylesheet' href='/codemirror-3.12/addon/hint/show-hint.css' />
   <link rel='stylesheet' href='/css/style.css' />
   <link rel='stylesheet' href='/css/Color.Picker.Classic.css' />
 
   <script src='/socket.io/socket.io.js'></script>
 
-  <script src='/js/jquery/jquery-1.9.1.min.js'></script>
-  <script src='/js/jquery/jquery-ui.min.js'></script>
-  <script src='/js/jquery.form.min.js'></script>
-  <script src='/js/bootstrap.min.js'></script>
-  <script src='/js/bootstrap-fileupload.min.js'></script>
+  <script src='/js/vendors/jquery/jquery-1.9.1.min.js'></script>
+  <script src='/js/vendors/jquery/jquery-ui.min.js'></script>
+  <script src='/js/vendors/jquery/jquery.form.min.js'></script>
+  <script src='/js/vendors/bootstrap/bootstrap.min.js'></script>
+  <script src='/js/vendors/bootstrap/bootstrap-fileupload.min.js'></script>
 
   <script src='/codemirror-3.12/lib/codemirror.js'></script>
   <script src='/codemirror-3.12/addon/display/placeholder.js'></script>
@@ -40,44 +37,31 @@
   <script src='/codemirror-3.12/mode/css/css.js'></script>
 
   <!-- Codemirror Linting -->
-  <link rel="stylesheet" href="/codemirror-3.12/addon/lint/lint.css">
-  <script src="/js/jshint.js"></script>
+  <link href="/codemirror-3.12/addon/lint/lint.css" rel="stylesheet" />
+  <script src="/js/vendors/jshint.js"></script>
   <script src="/codemirror-3.12/addon/lint/lint.js"></script>
   <script src="/codemirror-3.12/addon/lint/javascript-lint.js"></script>
 
-  <!-- 
-  <script src='/js/Tangle.js'></script>
-  <script type='text/javascript' src='/js/TangleKit/mootools.js'></script>
-  <script type='text/javascript' src='/js/TangleKit/sprintf.js'></script>
-  <script type='text/javascript' src='/js/TangleKit/BVTouchable.js'></script>
-  <script type='text/javascript' src='/js/TangleKit/TangleKit.js'></script>
-  -->
+  <script src='/js/vendors/html5slider.js'></script>
+  <script src='/js/libs/numberPicker.js'></script>
 
-  <script src='/js/html5slider.js'></script>
-  <script src='/js/numberPicker.js'></script>
+  <script src="/js/vendors/Color.Picker.Classic.js" type="text/javascript"></script>
+  <script src="/js/vendors/Color.Space.js" type="text/javascript"></script>
+  <script src="/js/libs/colorpicker.js" type="text/javascript"></script>
 
-  <script src="/js/Color.Picker.Classic.js" type="text/javascript"></script>
-  <script src="/js/Color.Space.js" type="text/javascript"></script>
-  <script src="/js/colorpicker.js" type="text/javascript"></script>
-
-  <script src='/js/acorn.js'></script>
-  <script src='/js/walk.js'></script>
-  <script src='/js/jslint.js'></script>
-  <script src='/js/uglifyjs.js'></script>
-  <script src='/js/lodash.js'></script>
-  <script src='/js/wormhole.js'></script>
-  <script src='/js/codemirror.js'></script>
-  <script src='/js/gist.js'></script>
-  <script src='/js/js.js'></script>
-  <script src='/js/templates.js'></script>
+  <script src='/js/libs/vendors/acorn.js'></script>
+  <script src='/js/libs/vendors/walk.js'></script>
+  <script src='/js/vendors/wormhole.js'></script>
+  <script src='/js/libs/codemirror.js'></script>
+  <script src='/js/lbs/js.js'></script>
+  <script src='/js/libs/templates.js'></script>
 </head>
 
-<!-- We could have an expert mode without hints, and a novice mode with hints and explanation of the code and basic programming. -->
 <body>
 
   <p id='column' style='position:absolute;right:10px;top:5px;text-align:right;color:white;'></p>
   <p id='index' style='position:absolute;right:100px;top:5px;text-align:right;color:white;'></p>
-  <p id='mouse' style='position:absolute;right:200px;top:5px;text-align:right;color:white;'></p>
+  <!-- <p id='mouse' style='position:absolute;right:200px;top:5px;text-align:right;color:white;'></p> -->
 
   <div id="inletSliderHtml" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
     <input class="range" type="range">
