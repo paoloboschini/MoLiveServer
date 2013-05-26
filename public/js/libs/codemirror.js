@@ -45,8 +45,9 @@ var codemirror = (function() {
 
     htmlCodeMirror.setSize('100%', '100%');
     htmlCodeMirror.on('cursorActivity', function(cm) {
-      $('#column').html('col: ' + htmlCodeMirror.getCursor().ch);
-      $('#index').html('index: ' + htmlCodeMirror.indexFromPos(htmlCodeMirror.getCursor()));
+      var cur = htmlCodeMirror.getCursor();
+      var index = htmlCodeMirror.indexFromPos(cur);
+      $('#cursorPosIndicator').html('col: ' + cur.ch + ', index: ' + index);
     });
     onChange(htmlCodeMirror, 'html', '#htmlToggleButton');
     CodeMirror.commands.autocompleteHtml = function(cm) {
@@ -94,8 +95,10 @@ var codemirror = (function() {
 
     jsCodeMirror.setSize('100%', '100%');
     jsCodeMirror.on('cursorActivity', function(cm) {
-      $('#column').html('col: ' + jsCodeMirror.getCursor().ch);
-      $('#index').html('index: ' + jsCodeMirror.indexFromPos(jsCodeMirror.getCursor()));
+      $('#runMenu').css('display','none');
+      var cur = jsCodeMirror.getCursor();
+      var index = jsCodeMirror.indexFromPos(cur);
+      $('#cursorPosIndicator').html('col: ' + cur.ch + ', index: ' + index);
 
       // Enable or disable the run button after linting JavaScript
       JSHINT(jsCodeMirror.getValue());
@@ -149,10 +152,12 @@ var codemirror = (function() {
         $('#savecode').removeClass('disabled').removeClass('btn-info');
       }
 
+      codeType = codeType == 'html' ? 'HTML files ' : 'JS files ';
+
       // Change color of save button to give feedback of a modified file
       if( !$('#savecode').hasClass('disabled') &&
           !$('#savecode').hasClass('btn-info') &&
-          $(toggleButtonName).text() != 'Choose a file (' + codeType + ')! ' &&
+          $(toggleButtonName).text() != codeType + 'files ' &&
           (change.origin == '+input' || change.origin == '+delete' || change.origin == 'undo')) {
         $('#savecode').addClass('btn-info');
       }

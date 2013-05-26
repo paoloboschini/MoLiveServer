@@ -1,8 +1,3 @@
-/**
- * JSLint: http://stackoverflow.com/questions/14007482/show-line-errors-in-codemirror
- * JSLint: https://github.com/douglascrockford/JSLint/wiki/JSLINT-in-a-web-page
- */
-
 (function() {
 
   // global socket
@@ -27,10 +22,6 @@
   socket.on('listResources', function(resources) {
     for (var i = 0; i < resources.length; i++) {
       CodeMirror.resourceImages().push('resources/' + resources[i]);
-      // image.values.push('resources/' + resources[i]);
-      // icon.values.push('resources/' + resources[i]);
-      // icon_android.values.push('resources/' + resources[i]);
-      // icon_ios.values.push('resources/' + resources[i]);
     }
     console.log('Loaded resources: '+ CodeMirror.resourceImages());
   });
@@ -139,12 +130,12 @@
 
       $('#htmlToggleButton')
         .removeClass('btn-success')
-        .text('Choose a file (html)! ')
+        .text('HTML files ')
         .append('<span class="caret" style="margin-top: 8px;"></span>');
 
       $('#jsToggleButton')
         .removeClass('btn-success')
-        .text('Choose a file (javascript)! ')
+        .text('JS files ')
         .append('<span class="caret" style="margin-top: 8px;"></span>');
 
       $('#gistsToggleLink')
@@ -288,16 +279,15 @@
     //
     // Set up right click for execute code
     // 
-    document.addEventListener('contextmenu', function(ev) {
-      ev.preventDefault();
+    $(document).on('contextmenu', '#codeMirrorJsContainer', function(ev) {
+      // ev.preventDefault();
       if(jsCodeMirror.somethingSelected()) {
         $('#runMenu').css('top', ev.pageY+'px').css('left', ev.pageX+'px').css('display','block');
+        document.body.scrollTop = currentScrollPos;
+        return false;
       }
       document.body.scrollTop = currentScrollPos;
-      return false;
-    }, false);
-    jsCodeMirror.on("focus", function() {
-      $('#runMenu').css('display','none');
+      return true;
     });
     $('#runMenu').on('click', function(e) {
       socket.emit('javascript', jsCodeMirror.getSelection());
