@@ -1273,7 +1273,9 @@ PhoneGap.shuttingDown = false;
 // _nativeReady is global variable that the native side can set
 // to signify that the native code is ready. It is a global since
 // it may be called before any PhoneGap JS is ready.
-if (typeof _nativeReady !== 'undefined') { PhoneGap.onNativeReady.fire(); }
+if (typeof window._nativeReady !== 'undefined') {
+	PhoneGap.onNativeReady.fire();
+}
 
 /**
  * onDeviceReady is fired only after all PhoneGap objects are created and
@@ -1287,14 +1289,15 @@ PhoneGap.onDeviceReady = new PhoneGap.Channel('onDeviceReady');
 // bug that caused onDeviceReady to fire too early.
 PhoneGap.deviceReadyChannelsArray = [
 	PhoneGap.onPhoneGapReady,
-	//PhoneGap.onPhoneGapInfoReady,
 	PhoneGap.onPhoneGapConnectionReady,
-	PhoneGap.onNativeReady];
+	PhoneGap.onNativeReady
+	// PhoneGap.onPhoneGapInfoReady
+	];
 
 // This is hack to overcome the problems with iOs6 devices, should be removed when that is fixed
 if(!mosync.isIOS)
 {
-  PhoneGap.deviceReadyChannelsArray.push(PhoneGap.onPhoneGapInfoReady);  
+  PhoneGap.deviceReadyChannelsArray.push(PhoneGap.onPhoneGapInfoReady);
 }
 // Hashtable of user defined channels that must also fire before "deviceready" is fired
 PhoneGap.deviceReadyChannelsMap = {};
