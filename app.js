@@ -5,9 +5,10 @@ var express = require('express'),
     io = require('socket.io').listen(server),
     fs = require('fs');
 
-io.enable('browser client minification');  // send minified client
-io.enable('browser client etag');          // apply etag caching logic based on version number
-io.enable('browser client gzip');          // gzip the file
+io.enable('browser client minification'); // send minified client
+io.enable('browser client etag');         // apply etag caching logic based on version number
+io.enable('browser client gzip');         // gzip the file
+// io.set('log level', 1);                   // reduce logging
 
 server.listen(5678);
 
@@ -79,7 +80,7 @@ everyauth.everymodule.findUserById(function(id, callback) {
   callback(null, usersById[id]);
 });
 
-/************ everyauth end ************/
+/************ End everyauth ************/
 
 /**
  * Setup the Express app.
@@ -336,8 +337,12 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('mobile').emit('downloadResource', data);
   });
 
-  socket.on('fileSaved', function(message) {
-    io.sockets.in('webapp').emit('fileSaved', message);
+  socket.on('fileSaved', function() {
+    io.sockets.in('webapp').emit('fileSaved');
+  });
+
+  socket.on('resourceSaved', function(message) {
+    io.sockets.in('webapp').emit('resourceSaved', message);
   });
 
   socket.on('getListResources', function() {
