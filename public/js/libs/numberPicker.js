@@ -14,11 +14,11 @@ var numberPicker = (function() {
     slider.change(function(e) {
       e.preventDefault();
 
-      // editor.off('cursorActivity', onCursorActivity);
+      editor.off('cursorActivity', onCursorActivity);
 
       var cur = editor.getCursor();
       var token = editor.getTokenAt(cur);
-      editor.setCursor({line: cur.line, ch: token.end});
+      // editor.setCursor({line: cur.line, ch: token.end});
 
       // when cursor is in front of a token, the token is then null,
       // replace token with tokenAhead which is at a ch+1
@@ -106,7 +106,8 @@ var numberPicker = (function() {
 
           // here we could bing right and left keys to
           // move the slider with the keyboard
-          cm.addKeyMap(sliderMap);
+          // Still to fix bugs
+          // cm.addKeyMap(sliderMap);
 
         } else {
           hideSlider(cm);
@@ -116,21 +117,21 @@ var numberPicker = (function() {
       }
     }
 
-    var sliderMap = {
-      Left: function() {
-        slider.get(0).stepDown(1);
-        slider.trigger('change');
-      },
-      Right: function() {
-        slider.get(0).stepUp(1);
-        slider.trigger('change');
-      }
-    };
+    // var sliderMap = {
+    //   Left: function() {
+    //     slider.get(0).stepDown(1);
+    //     slider.trigger('change');
+    //   },
+    //   Right: function() {
+    //     slider.get(0).stepUp(1);
+    //     slider.trigger('change');
+    //   }
+    // };
 
     function hideSlider(cm) {
       sliderDiv.css('visibility', 'hidden');
       slider.val(50);
-      cm.removeKeyMap(sliderMap);
+      // cm.removeKeyMap(sliderMap);
     }
     //-------------------------------------------------------
     //

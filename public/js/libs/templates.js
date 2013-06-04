@@ -9,7 +9,7 @@ var nativeHtmlTemplate = '<!DOCTYPE html>\n' +
 '    <div data-widgetType="Screen" id="mainScreen">\n' +
 '\n' +
 '      <!-- Image widget -->\n' +
-'      <div data-widgetType="Image" image="resources/100.jpeg"></div>\n' +
+'      <div data-widgetType="Button" text="Click me!" id="btn"></div>\n' +
 '\n' +
 '    </div> <!--screen widget-->\n' +
 '  </div> <!--nativeui-->\n' +
@@ -19,7 +19,7 @@ var nativeHtmlTemplate = '<!DOCTYPE html>\n' +
 var nativeJavaScriptTemplate = 'mosync.nativeui.UIReady = function() {\n' +
 '  var mainScreen = document.getNativeElementById("mainScreen");\n' +
 '  mainScreen.show();\n' +
-'  //var vibrateButton = document.getNativeElementById("vibrateButton");\n' +
+'  var button = document.getNativeElementById("btn");\n' +
 '};\n' +
 '\n' +
 'document.addEventListener("deviceready", function() {\n' +

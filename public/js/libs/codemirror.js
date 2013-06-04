@@ -217,7 +217,7 @@ var codemirror = (function() {
     JSHINT(code, {smarttabs: true});
     var errors = JSHINT.data().errors;
     if (errors) {
-      console.log('errors');
+      // console.log('errors');
       return;
     }
 

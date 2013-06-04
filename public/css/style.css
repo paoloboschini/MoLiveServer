@@ -33,9 +33,12 @@ body {
   box-sizing: border-box;
 }
 
+#editors {
+  height: 500px;
+}
+
 #authentication {
   float: right;
-  position:relative;
   height: 50px;
 }
 
@@ -163,9 +166,7 @@ h1 {
  * function declarations
  */
 .parserHighlight {
-  /*background-color: #e1e1e1;*/
   font-weight: bold;
-  /*font-size: 16px;*/
 }
 
 #cursorPosIndicator {
@@ -188,7 +189,6 @@ h1 {
 
 /**
  * Main divs in #Header
- * 
  */
 #leftHeader {
   float: left;
@@ -196,15 +196,15 @@ h1 {
   height: 100%;
 }
 #centerHeader {
+  float: left;
   width: 20%;
   height: 100%;
-  float: left;
   position: relative;
 }
 #rightHeader {
+  float: left;
   width: 40%;
   height: 100%;
-  float: left;
 }
 
 .filePickerContainer {
@@ -217,8 +217,4 @@ h1 {
   width: 58px;
   margin: 0 auto;
   margin-top: 20px;
-}
-
-#editors {
-  height: 500px;
 }
