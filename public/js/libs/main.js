@@ -2,7 +2,7 @@
 
   // global socket
   var socket = io.connect();
-
+  var server_ip;
 
   //-------------------------------------------------------
   //
@@ -12,7 +12,6 @@
   socket.on('connect', function() {
     socket.emit('room', 'webapp');
   });
-
 
   //-------------------------------------------------------
   //
@@ -250,7 +249,7 @@
       /**
        * Removes embedded javascript scripts from html.
        * For some obscure reason, the doctype tag and the head
-       * tag are removed also from the html, this is wrong.
+       * tag are also removed from the html, this is wrong.
        * @param  s html string
        * @return html string without embedded javascript
        */
@@ -270,15 +269,15 @@
       // code = code.replace(/\s+/g,' ');
     });
 
+    //-------------------------------------------------------
+    //
+    // Set up right click for execute code
+    // 
     var currentScrollPos;
     $(window).scroll(function () {
       currentScrollPos = document.body.scrollTop;
     });
 
-    //-------------------------------------------------------
-    //
-    // Set up right click for execute code
-    // 
     $(document).on('contextmenu', '#codeMirrorJsContainer', function(ev) {
       // ev.preventDefault();
       if(jsCodeMirror.somethingSelected()) {
@@ -457,7 +456,7 @@
           }
           // alert('file uploaded!');
           $('#downloadResourceModal').modal('hide');
-          socket.emit('downloadResource', {url : 'http://localhost:5678/uploads/' + response, filename : response });
+          socket.emit('downloadResource', response);
 
           CodeMirror.resourceImages().push('resources/' + response);
         }
@@ -471,7 +470,7 @@
     // Alert the user with the result of an attempt to save
     // a new file resurce on the device
     // 
-    socket.on('fileSaved', function(message) {
+    socket.on('resourceSaved', function(message) {
       alert(message);
     });
 
@@ -565,8 +564,8 @@
     // When a gist file is saved, give feedback to the user
     function showMessageFileSaved() {
       hideLoadIndicator();
-      $('#fileSaved').fadeIn(1000, function() {
-        $('#fileSaved').fadeOut(3000);
+      $('#fileSavedFlashMessage').fadeIn(1000, function() {
+        $('#fileSavedFlashMessage').fadeOut(3000);
       });
     }
 
