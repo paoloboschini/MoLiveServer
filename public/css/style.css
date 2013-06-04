@@ -1,3 +1,6 @@
+/**
+ * Main
+ */
 body {
   margin: 0;
   padding: 0;
@@ -5,19 +8,6 @@ body {
   min-width: 1200px;
 }
 
-.CodeMirror {}
-
-.CodeMirror pre.CodeMirror-placeholder {
-  color: #999;
-}
-
-/*.CodeMirror-focused .cm-matchhighlight {
-  background: rgba(255, 0, 0, 0.5);
-}
-.CodeMirror-activeline-background {
-  background: rgba(100, 100, 100, 0.2) !important;
-}
-*/
 #header {
   background: #003B80;
   height: 50px;
@@ -77,6 +67,24 @@ h1 {
   line-height: 60px;
 }
 
+/**
+ * Code Mirror custom
+ */
+.CodeMirror pre.CodeMirror-placeholder {
+  color: #999;
+}
+
+/*.CodeMirror-focused .cm-matchhighlight {
+  background: rgba(255, 0, 0, 0.5);
+}
+.CodeMirror-activeline-background {
+  background: rgba(100, 100, 100, 0.2) !important;
+}
+*/
+
+/**
+ * HTML5 slider custom
+ */
 .inlet_slider {
   z-index: 1010;
   margin: 0 !important;
@@ -91,7 +99,7 @@ h1 {
   z-index: 10;
   /*width: 24%;*/
   width: 300px;
-  display: block;
+  /*display: block;*/
   border-radius: 3px;
   height: 14px;
   -webkit-box-shadow: inset 0px 0px 5px 0px rgba(4, 4, 4, 0.5);
@@ -104,6 +112,10 @@ h1 {
   background-image: -ms-linear-gradient(top, #d6d6d6, #ebebeb);
   background-image: linear-gradient(top, #d6d6d6, #ebebeb);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#d6d6d6', EndColorStr='#ebebeb');
+  visibility: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 .inlet_slider:hover {
   opacity: 0.98;
@@ -139,59 +151,74 @@ h1 {
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr='#424242', EndColorStr='#212121');
 }
 
-/*fix for toggling html and js buttons*/
+/**
+ * Fix for toggling html and js buttons
+ */
 .darker.active {
   background-color: rgb(185, 185, 185) !important;
 }
 
-/*for pop up menu execute code*/
-.CodeMirror-hints {
-  position: absolute;
-  z-index: 10;
-  overflow: hidden;
-  list-style: none;
-
-  margin: 0;
-  padding: 2px;
-
-  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-  border-radius: 3px;
-  border: 1px solid silver;
-
-  background: white;
-  font-size: 90%;
-  font-family: monospace;
-
-  max-height: 20em;
-  overflow-y: auto;
-}
-
-.CodeMirror-hint {
-  margin: 0;
-  padding: 0 4px;
-  border-radius: 2px;
-  max-width: 19em;
-  overflow: hidden;
-  white-space: pre;
-  color: black;
-  cursor: pointer;
-}
-
-.CodeMirror-hint-active {
-  background: #08f;
-  color: white;
-}
-
+/**
+ * Custom parser highlight top level expressions and
+ * function declarations
+ */
 .parserHighlight {
   /*background-color: #e1e1e1;*/
   font-weight: bold;
   /*font-size: 16px;*/
 }
-.selectionOverParserHighlight {
-  background-color: white;
+
+#cursorPosIndicator {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  text-align: right;
+  color:white;
 }
 
-.CodeMirror-selected  { background-color: #e1e1e1 !important; }
-.CodeMirror-selectedtext { color: white; }
+#fileSavedFlashMessage {
+  display: none;
+  position: absolute;
+  color: white;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  top: 5px;
+}
+
+/**
+ * Main divs in #Header
+ * 
+ */
+#leftHeader {
+  float: left;
+  width: 40%;
+  height: 100%;
+}
+#centerHeader {
+  width: 20%;
+  height: 100%;
+  float: left;
+  position: relative;
+}
+#rightHeader {
+  width: 40%;
+  height: 100%;
+  float: left;
+}
+
+.filePickerContainer {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+}
+
+#saveCodeButtonContainer {
+  width: 58px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+#editors {
+  height: 500px;
+}
