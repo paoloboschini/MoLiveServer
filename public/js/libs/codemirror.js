@@ -140,7 +140,7 @@ var codemirror = (function() {
 
         if (codeType == 'javascript') {
           // why do we need to run html if only JavaScript code is changed?
-          // Beacuse of the widgets
+          // Beacuse of the widgets???
           // emitCode('html', htmlCodeMirror);
           if(!errors) {
             emitCode(codeType, editor, false);

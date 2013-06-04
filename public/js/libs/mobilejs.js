@@ -20,6 +20,8 @@
 
   socket.on('javascript', function(code) {
     try {
+      mosync.nativeui.callBackTable = {};
+      mosync.nativeui.eventCallBackTable = {};
       console.log('Code evaluate on mobile:' + code);
       // execute eval in the global scope
       eval.call(window, code);

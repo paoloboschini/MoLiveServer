@@ -1,0 +1,54 @@
+This blogpost is about live programming for mobile application development. I
+have been working on this project for a few weeks now and I want to share with
+you problems I have encountered and ideas that I came up with. This project is
+also my master thesis project at Uppsala University.
+
+So what is Live programming? Live programming is a way of programming where
+changes made to the code are immediately showed by the programming
+environment, so that the programmer can get immediate feedback on what she is
+doing. This approach tries to eliminate the gap between the program
+representation (code in form of text) and its corresponding runtime
+representation.
+
+The idea of implementing a live environment for mobile application development
+came from different sources, but the most important ones a without any doubt
+Bret Victor's talk (put link here) and the Kahn Academy computer science
+platform. While Bret Victor shows the potential of this programming technique,
+John Resig's implementation of the Khan Academy CS platform is actually a
+usable environment for experimenting with live programming on the web.
+
+Today mobile applications are ubiquitous and more and more developers are
+attracted to this world. MoSync is a great new way of creating mobile
+applications, so I wanted to combine the flexibility of the MoSync tools with
+a new environment that could enhance the user experience when doing mobile
+development.
+
+The prototype consists of a NodeJS server that coordinates the communication
+between the web application where developers can write code, and a mobile
+application container that displays the result of the edited code in real
+time. The idea is very simple: at every code update, the changes are pushed to
+the mobile connected to the server through web sockets, and the mobile
+displays the output app. Since this prototype relies on the MoSync tools,
+users can develop mobile applications using exclusively web technologies (HTML
+and JavaScript). Functionality wise, the system is very similar to Reload,
+although the user does not have to press reload every time she wants to see
+the updated output app. There is also no need to install a code editor, since
+all the code is done online in a web browser, giving more flexibility and the
+possibility to extend the environment with functionalities.
+
+The system consists of three main component:
+
+1. A web application interface for coding. The web interface implements two
+instances of CodeMirror, one for HTML and one for JavaScript. The code editor
+implements autocompletion, sliders for numbers and a colour palette for
+quickly changing colours. Users can log in to GitHub and synch their projects
+with Gists.
+
+2. A server that listens to messages from the web application and forwards
+them to the mobile application container, and vice versa.
+
+3. A mobile application container that uses a web view for displaying the html
+code and evaluating the JavaScript.
+
+Here is the link to the server where you can find more information on how to
+run it together with the mobile application container.
