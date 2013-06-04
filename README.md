@@ -1,4 +1,4 @@
-#Online Editor for live mobile programming#
+#Server and Web Application for live mobile programming#
 
 This is a web application for creating and editing mobile applications live with support for both web technologies (HTML5/JavaScript) and the [MoSync][1] SDK for creating Native UI applications using JavaScript and/or accessing services on a mobile device through HTML5/JavaScript.
 
