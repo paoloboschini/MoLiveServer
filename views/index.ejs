@@ -51,7 +51,7 @@
 
   <script src='/js/vendors/acorn/acorn.js'></script>
   <script src='/js/vendors/acorn/walk.js'></script>
-  <script src='/js/vendors/wormhole.js'></script>
+  <!-- <script src='/js/vendors/wormhole.js'></script> -->
   <script src='/js/libs/codemirror.js'></script>
   <script src='/js/libs/main.js'></script>
   <script src='/js/libs/templates.js'></script>
@@ -59,37 +59,36 @@
 
 <body>
 
-  <p id='cursorPosIndicator' style='position:absolute;right:10px;top:5px;text-align:right;color:white;'></p>
+  <p id='cursorPosIndicator'></p>
   <!-- <p id='mouse' style='position:absolute;right:200px;top:5px;text-align:right;color:white;'></p> -->
 
-  <div id="inletSliderHtml" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
+  <div id="inletSliderHtml" class="inlet_slider">
     <input class="range" type="range">
   </div>
 
-  <div id="inletSliderJS" class="inlet_slider" style="visibility:hidden;position:absolute;left:0px;top:0px;">
+  <div id="inletSliderJS" class="inlet_slider">
     <input class="range" type="range">
   </div>
 
   <div id='header'>
-    
-    <p id='fileSaved' style='display:none;position:absolute;color:white;text-align:center;width:100%;left:0;top:5px;'>File(s) saved!</p>
+    <p id='fileSavedFlashMessage'>File(s) saved!</p>
 
-    <div id='one' style='width:40%;height:100%;float:left;'>
+    <div id='leftHeader'>
       <% if(everyauth.loggedIn) {%>
         <% include gituser %>
       <% } %>
       <% include execute %>
     </div>
 
-    <div id='two' style='width:20%;height:100%;float:left;position:relative;'>
+    <div id='centerHeader'>
       <% if(everyauth.loggedIn) {%>
-        <div style='left:0;width:50%;height:100%;position:absolute;'>
+        <div class='filePickerContainer' style='left:0;'>
           <% include htmlfilespicker %>
         </div>
-        <div style='right:0;width:50%;height:100%;position:absolute;'>
+        <div class='filePickerContainer' style='right:0;'>
           <% include jsfilespicker %>
         </div>
-        <div style='width:58px;margin:0 auto;margin-top:20px;'>
+        <div id='saveCodeButtonContainer'>
           <div style='position:absolute'>
             <button id='savecode' class='btn disabled' type='button'>Save</button>
           </div>
@@ -97,12 +96,13 @@
       <% } %>
     </div>
 
-    <div id='three' style='width:40%;height:100%;float:left;'>
+    <div id='rightHeader'>
       <% include authentication %>
     </div>
   </div> <!-- header div -->
 
-  <div id='editors' style='height:500px;border:0px solid red;'>
+  <!-- editors div -->
+  <div id='editors'>
     <div id='codeMirrorHtmlContainer'>
       <textarea id='cmHtml'></textarea>
     </div>
@@ -116,9 +116,6 @@
 
   <!-- Modals -->
   <% include modals %>
-
-  <!-- Used for Khan Academy Hack -->
-  <!-- <div style='display:none' id='sandboxCode'></div> -->
 
   <div id='runMenu' class='CodeMirror-hints' style='display:none;'>
     <p class='CodeMirror-hint CodeMirror-hint-active'>Execute Code</p>
