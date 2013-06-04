@@ -101,7 +101,7 @@ var codemirror = (function() {
       $('#cursorPosIndicator').html('col: ' + cur.ch + ', index: ' + index);
 
       // Enable or disable the run button after linting JavaScript
-      JSHINT(jsCodeMirror.getValue());
+      JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
       var errors = JSHINT.data().errors;
       if (errors) {
         $('#executecode').addClass('disabled');
@@ -128,20 +128,21 @@ var codemirror = (function() {
 
       if ($('#autoload').is(':checked')) {
 
-        JSHINT(jsCodeMirror.getValue());
+        JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
         var errors = JSHINT.data().errors;
 
         if (codeType == 'html') {
           emitCode(codeType, editor, true);
-          if(typeof(errors) == 'undefined') {
+          if(!errors) {
             emitCode('javascript', jsCodeMirror, true);
           }
         }
 
         if (codeType == 'javascript') {
           // why do we need to run html if only JavaScript code is changed?
+          // Beacuse of the widgets
           // emitCode('html', htmlCodeMirror);
-          if(typeof(errors) == 'undefined') {
+          if(!errors) {
             emitCode(codeType, editor, false);
           }
         }
@@ -152,12 +153,12 @@ var codemirror = (function() {
         $('#savecode').removeClass('disabled').removeClass('btn-info');
       }
 
-      codeType = codeType == 'html' ? 'HTML files ' : 'JS files ';
+      var _codeType = codeType == 'html' ? 'HTML files ' : 'JS files ';
 
       // Change color of save button to give feedback of a modified file
       if( !$('#savecode').hasClass('disabled') &&
           !$('#savecode').hasClass('btn-info') &&
-          $(toggleButtonName).text() != codeType + 'files ' &&
+          $(toggleButtonName).text() != _codeType + 'files ' &&
           (change.origin == '+input' || change.origin == '+delete' || change.origin == 'undo')) {
         $('#savecode').addClass('btn-info');
       }
@@ -202,7 +203,7 @@ var codemirror = (function() {
   function highlightFirstLevelActiveNode() {
     if (typeof(marker) != 'undefined') marker.clear();
     var node = firstLevelActiveNode();
-    if (typeof(node) != 'undefined') {
+    if (node) {
       var start = node.start;
       var end = node.end;
       marker = jsCodeMirror.markText(start, end, {className: 'parserHighlight'});
@@ -213,9 +214,12 @@ var codemirror = (function() {
     var code = jsCodeMirror.getValue();
 
     // If there is an error, stop parsing
-    JSHINT(code);
+    JSHINT(code, {smarttabs: true});
     var errors = JSHINT.data().errors;
-    if (errors) return;
+    if (errors) {
+      console.log('errors');
+      return;
+    }
 
     // parse the program to a node program
     var program = acorn.parse(code, {locations: true, ranges: true});
@@ -244,6 +248,14 @@ var codemirror = (function() {
     }
   }
 
+  $(function() {
+    $('#autoload').click(function() {
+      if (!$('#autoload').is(':checked')) {
+        if (typeof(marker) != 'undefined') marker.clear();
+      }
+    });
+  });
+
   /**
    * Emit code through the socket.
    * This function is bound to any change made to the code editors.
@@ -255,13 +267,11 @@ var codemirror = (function() {
       var currentTime = new Date().getTime();
       if (currentTime - lastKeypress > latencyFromLastPress) {
         if (codeType == 'javascript' && !executeEverything) {
-          console.log('is js and live');
           var node = firstLevelActiveNode();
-          if (typeof(node) != 'undefined') {
+          if (node) {
             socket.emit(codeType, node.content);
           }
         } else {
-          console.log('is not live');
           socket.emit(codeType, editor.getValue());
         }
       }
