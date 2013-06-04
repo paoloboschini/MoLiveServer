@@ -9,21 +9,18 @@
   });
 
   socket.on('html', function(code) {
-    console.log('html code evaluated:', code);
+    console.log('html code evaluated:' + code);
     reset();
-    document.location.reload(true);
-
-    // mosync = null;
+    // document.location.reload(true);
 
     document.open();
     document.write(code);
     document.close();
-
   });
 
   socket.on('javascript', function(code) {
     try {
-      console.log('Code evaluate on mobile:', code);
+      console.log('Code evaluate on mobile:' + code);
       // execute eval in the global scope
       eval.call(window, code);
     } catch(e) {
@@ -39,6 +36,17 @@
     reset();
   });
 
+  /**
+   * This function can be called by two sources:
+   * 1. When the user clicks on the Restart button,
+   *    then the web app needs to know when then the
+   *    webview is done restoring itself and it is ready.
+   *    In this case we send mobileIsReady message.
+   * 2. When reset is called while live programming,
+   *    i.e. the user is editing the HTML area.
+   * @param  {[type]} liveCoding [description]
+   * @return {[type]}            [description]
+   */
   function reset() {
     mosync.nativeui.destroyAll();
     mosync.bridge.send(['Custom', 'restoreWebView']);
@@ -50,14 +58,25 @@
     window.clearInterval(mosync.nativeui.showInterval);
   }
 
-  socket.on('downloadResource', function(data) {
+  //-------------------------------------------------------
+  //
+  // Get server IP address
+  // 
+  mosync.bridge.send([
+    'Custom',
+    'getServerAddress'
+  ], function(ip) {
+    server_ip = ip;
+  });
+
+  socket.on('downloadResource', function(filename) {
     mosync.bridge.send([
       'Custom',
       'downloadResource',
-      data.url,
-      data.filename
+      'http://' + server_ip + ':5678/uploads/' + filename,
+      filename
     ], function(message) {
-      socket.emit('fileSaved', message);
+      socket.emit('resourceSaved', message);
     });
   });
 
