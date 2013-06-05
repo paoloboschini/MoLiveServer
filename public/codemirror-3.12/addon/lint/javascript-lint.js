@@ -10,7 +10,8 @@
                  "Unclosed string", "Stopping, unable to continue" ];
 
   function validator(options, text) {
-    JSHINT(text, {smarttabs: true});
+    codemirror.hintString(text);
+    // JSHINT(text, {smarttabs: true});
     var errors = JSHINT.data().errors, result = [];
     if (errors) parseErrors(errors, result);
     return result;

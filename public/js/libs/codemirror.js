@@ -101,7 +101,7 @@ var codemirror = (function() {
       $('#cursorPosIndicator').html('col: ' + cur.ch + ', index: ' + index);
 
       // Enable or disable the run button after linting JavaScript
-      JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
+      codemirror.hintString(jsCodeMirror.getValue());
       var errors = JSHINT.data().errors;
       if (errors) {
         $('#executecode').addClass('disabled');
@@ -128,7 +128,8 @@ var codemirror = (function() {
 
       if ($('#autoload').is(':checked')) {
 
-        JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
+        // JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
+        codemirror.hintString(jsCodeMirror.getValue());
         var errors = JSHINT.data().errors;
 
         if (codeType == 'html') {
@@ -214,7 +215,8 @@ var codemirror = (function() {
     var code = jsCodeMirror.getValue();
 
     // If there is an error, stop parsing
-    JSHINT(code, {smarttabs: true});
+    // JSHINT(code, {smarttabs: true});
+    codemirror.hintString(code);
     var errors = JSHINT.data().errors;
     if (errors) {
       // console.log('errors');
@@ -277,6 +279,10 @@ var codemirror = (function() {
       }
     }, latencyFromLastPress + 10);
   }
+
+  codemirror.hintString = function(str) {
+    JSHINT(str, {smarttabs: true, asi: true});
+  };
 
   return codemirror;
 

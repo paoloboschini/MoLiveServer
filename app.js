@@ -263,6 +263,11 @@ app.get('/mobile', function(req, res){
 app.post('/upload', function(req, res){
   console.log(req.files);
 
+  var path = require('path');
+  if (!path.existsSync(__dirname + '/public/uploads')) {
+    fs.mkdir(__dirname + '/public/uploads');
+  }
+
   fs.readFile(req.files.savefile.path, function (err, data) {
     var newPath = __dirname + '/public/uploads/' + req.files.savefile.name;
     console.log(newPath);
@@ -272,6 +277,23 @@ app.post('/upload', function(req, res){
     });
   });
 
+});
+
+/**
+ * Return server ip address
+ */
+app.post('/serverip', function(req,res) {
+  // Get the server ip
+  var net = require('net');
+  var _socket = net.createConnection(80, "www.google.com");
+  _socket.on('connect', function () {
+      res.send(_socket.address().address);
+      _socket.end();
+  });
+
+  _socket.on('error', function (e) {
+    res.send('Error');
+  });
 });
 
 /**
@@ -300,6 +322,7 @@ io.sockets.on('connection', function(socket) {
 
   // Send the edited code to github to update the gist file
   socket.on('saveFileGist', function(data) {
+    console.log('data:', data);
     var newFile = data['new'];
     var filename = data.filename;
     var type = data.type;
@@ -320,10 +343,11 @@ io.sockets.on('connection', function(socket) {
         console.log('Error saving file: ' + filename);
       } else {
         console.log('file saved! >>> ' + filename);
+        console.log('newFile:', newFile);
         if(newFile) {
           io.sockets.in('webapp').emit('filecreated', {id : currentSelectedGistId, filename : filename, type : type});
         } else {
-          io.sockets.in('webapp').emit('filesaved');
+          io.sockets.in('webapp').emit('fileSaved');
         }
       }
     });
@@ -333,8 +357,12 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('mobile').emit('reset');
   });
 
-  socket.on('downloadResource', function(data) {
-    io.sockets.in('mobile').emit('downloadResource', data);
+  socket.on('downloadResourceFromServer', function(data) {
+    io.sockets.in('mobile').emit('downloadResourceFromServer', data);
+  });
+
+  socket.on('downloadResourceFromWeb', function(data) {
+    io.sockets.in('mobile').emit('downloadResourceFromWeb', data);
   });
 
   socket.on('fileSaved', function() {

@@ -60,23 +60,35 @@
     window.clearInterval(mosync.nativeui.showInterval);
   }
 
-  //-------------------------------------------------------
-  //
-  // Get server IP address
-  // 
-  mosync.bridge.send([
-    'Custom',
-    'getServerAddress'
-  ], function(ip) {
-    server_ip = ip;
-  });
+  var _serverip;
+  $.ajax({
+    url: '/serverip',
+    type: 'POST',
+    cache: false,
+    timeout: 10000,
+    success: function(response) {
+      _serverip = response;
+    } // success
+  }); // ajax
 
-  socket.on('downloadResource', function(filename) {
+  socket.on('downloadResourceFromServer', function(filename) {
+    console.log('downloadResourceFromServer');
     mosync.bridge.send([
       'Custom',
       'downloadResource',
-      'http://' + server_ip + ':5678/uploads/' + filename,
+      'http://' + _serverip + ':5678/uploads/' + filename,
       filename
+    ], function(message) {
+      socket.emit('resourceSaved', message);
+    });
+  });
+
+  socket.on('downloadResourceFromWeb', function(data) {
+    mosync.bridge.send([
+      'Custom',
+      'downloadResource',
+      data.url,
+      data.filename
     ], function(message) {
       socket.emit('resourceSaved', message);
     });

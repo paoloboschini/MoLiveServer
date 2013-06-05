@@ -2,7 +2,6 @@
 
   // global socket
   var socket = io.connect();
-  var server_ip;
 
   //-------------------------------------------------------
   //
@@ -39,6 +38,16 @@
   // On load of page
   // 
   $(function() {
+
+    $.ajax({
+      url: '/serverip',
+      type: 'POST',
+      cache: false,
+      timeout: 10000,
+      success: function(response) {
+        $('#serverip').html('Server IP: ' + response);
+      } // success
+    }); // ajax
 
     codemirror.setSocket(socket);
     var htmlCodeMirror = codemirror.initHtmlCodeMirror();
@@ -117,6 +126,17 @@
     } // end get gists of the user
 
 
+    $('#htmlToggleButton').click(function() {
+      if($(this).hasClass('disabled')) {
+        return false;
+      }
+    });
+    $('#jsToggleButton').click(function() {
+      if($(this).hasClass('disabled')) {
+        return false;
+      }
+    });
+
     //-------------------------------------------------------
     //
     // When choosing a gist, fetch the files
@@ -155,8 +175,8 @@
         success: function(response) {
           hideLoadIndicator();
 
-          $('#htmlToggleButton').attr('href', 'choose');
-          $('#jsToggleButton').attr('href', 'choose');
+          $('#htmlToggleButton').attr('href', 'choose').attr('disabled', false);
+          $('#jsToggleButton').attr('href', 'choose').attr('disabled', false);
 
           if (response.htmlfiles.length > 0) {
             $('#htmlToggleButton').addClass('btn-success');
@@ -227,6 +247,10 @@
     // server (the server will send it to the mobile)
     // 
     $('#executecode').click(function() {
+      if($(this).hasClass('disabled')) {
+        return false;
+      }
+
       var html = htmlCodeMirror.getValue();
       socket.emit('html', html);
 
@@ -300,6 +324,10 @@
     // existing gist if the file already exist (via the socket)
     // 
     $('#savecode').click(function() {
+      if($(this).hasClass('disabled')) {
+        return false;
+      }
+
       var htmlFilename = $('#htmlToggleButton').text();
       var jsFilename = $('#jsToggleButton').text();
 
@@ -420,7 +448,8 @@
     // the connected device
     // 
     $('#resourceModalSave').click(function() {
-      socket.emit('downloadResource', {url : $('#inputUrlResource').val(), filename : $('#inputFilenameResource').val() });
+      socket.emit('downloadResourceFromWeb', {url : $('#inputUrlResource').val(), filename : $('#inputFilenameResource').val() });
+      CodeMirror.resourceImages().push('resources/' + response);
     });
 
     //-------------------------------------------------------
@@ -456,7 +485,7 @@
           }
           // alert('file uploaded!');
           $('#downloadResourceModal').modal('hide');
-          socket.emit('downloadResource', response);
+          socket.emit('downloadResourceFromServer', response);
 
           CodeMirror.resourceImages().push('resources/' + response);
         }
