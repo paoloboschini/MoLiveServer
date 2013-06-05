@@ -91,9 +91,10 @@
       htmlCodeMirror.setValue(webHtmlTemplate);
       jsCodeMirror.setValue(webJavaScriptTemplate);
     });
-    $('#acTemplate').click(function(e) {
+    $('#gettingStartedTemplate').click(function(e) {
       e.preventDefault();
-      jsCodeMirror.setValue(autocompletetestTemplate);
+      htmlCodeMirror.setValue(gettingStartedHtmlTemplate);
+      jsCodeMirror.setValue(gettingStartedJavaScriptTemplate);
     });
 
     //-------------------------------------------------------
@@ -581,6 +582,15 @@
     $('.collapsibleLink').click(function(e) {
       e.preventDefault();
     });
+
+    //-------------------------------------------------------
+    //
+    // Send the user to a form for a feedback on the prototype
+    //
+    $('#feedback').click(function() {
+      window.open('https://docs.google.com/forms/d/1U1tFal2g6pwXG04eg-YPeWgBXbDwEwxBtkvxQKEEIrw/edit');
+    });
+
 
     //-------------------------------------------------------
     //

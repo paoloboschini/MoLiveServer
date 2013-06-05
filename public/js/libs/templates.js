@@ -1,3 +1,7 @@
+var gettingStartedHtmlTemplate = '<!-- HTML Code goes here -->';
+
+var gettingStartedJavaScriptTemplate = '';
+
 var nativeHtmlTemplate = '<!DOCTYPE html>\n' +
 '<html>\n' +
 '  <head>\n' +
@@ -8,9 +12,15 @@ var nativeHtmlTemplate = '<!DOCTYPE html>\n' +
 '  <div id="NativeUI">\n' +
 '    <div data-widgetType="Screen" id="mainScreen">\n' +
 '\n' +
-'      <!-- Image widget -->\n' +
-'      <div data-widgetType="Button" text="Click me!" id="btn"></div>\n' +
+'      <div data-widgetType="VerticalLayout">\n' +
 '\n' +
+'        <!-- Button widget -->\n' +
+'        <div data-widgetType="Button" text="Time" id="btnTime"></div>\n' +
+'\n' +
+'        <!-- Button widget -->\n' +
+'        <div data-widgetType="Button" text="Phone Name" id="btnName"></div>\n' +
+'\n' +
+'      </div> <!--vertical layout-->\n' +
 '    </div> <!--screen widget-->\n' +
 '  </div> <!--nativeui-->\n' +
 '</body>\n' +
@@ -19,17 +29,21 @@ var nativeHtmlTemplate = '<!DOCTYPE html>\n' +
 var nativeJavaScriptTemplate = 'mosync.nativeui.UIReady = function() {\n' +
 '  var mainScreen = document.getNativeElementById("mainScreen");\n' +
 '  mainScreen.show();\n' +
-'  var button = document.getNativeElementById("btn");\n' +
+'\n' +
+'  var btnTime = document.getNativeElementById("btnTime");\n' +
+'  btnTime.addEventListener("Clicked", function() {\n' +
+'    alert(new Date());\n' +
+'  });\n' +
+'\n' +
+'  var btnName = document.getNativeElementById("btnName");\n' +
+'  btnName.addEventListener("Clicked", function() {\n' +
+'    alert(device.name);\n' +
+'  });\n' +
 '};\n' +
 '\n' +
 'document.addEventListener("deviceready", function() {\n' +
 '  mosync.nativeui.initUI();\n' +
 '},true);';
-
-var autocompletetestTemplate = 'var myButton = mosync.nativeui.create("Button", "myButton", {\n' +
-'  "text" : "Click Me!",\n' +
-'  "width" : "FILL_AVAILABLE_SPACE"\n' +
-'});';
 
 var webHtmlTemplate = '<!DOCTYPE html>\n' +
 '<html>\n' +
@@ -42,12 +56,12 @@ var webHtmlTemplate = '<!DOCTYPE html>\n' +
 '    <div id="screen">\n' +
 '      <div id="heading">Customized Wormhole Technology</div>\n' +
 '      <div id="info">\n' +
-'        <div>Platform: <span id="platform">&nbsp;</span></div>\n' +
-'        <div>Version: <span id="version">&nbsp;</span></div>\n' +
-'        <div>UUID: <span id="uuid">&nbsp;</span></div>\n' +
-'        <div>Name: <span id="name">&nbsp;</span></div>\n' +
-'        <div>Width: <span id="width">&nbsp;</span></div>\n' +
-'        <div>Height: <span id="height">&nbsp;</span></div>\n' +
+'        <div>Platform: <span id="platform"></span></div>\n' +
+'        <div>Version: <span id="version"></span></div>\n' +
+'        <div>UUID: <span id="uuid"></span></div>\n' +
+'        <div>Name: <span id="name"></span></div>\n' +
+'        <div>Width: <span id="width"></span></div>\n' +
+'        <div>Height: <span id="height"></span></div>\n' +
 '      </div>\n' +
 '      <div onclick=\'changeColor()\'>Change Color</div>\n' +
 '    </div>\n' +
@@ -72,4 +86,16 @@ var webJavaScriptTemplate = '/*\n' +
 '    .toString(16).substr(1,6);\n' +
 '  document.documentElement.style.backgroundColor = color;\n' +
 '  document.body.style.backgroundColor = color;\n' +
-'}';
+'}\n' +
+'\n' +
+'function displayDeviceInfo() {\n' +
+'  document.getElementById("platform").innerHTML = device.platform;\n' +
+'  document.getElementById("version").innerHTML = device.version;\n' +
+'  document.getElementById("uuid").innerHTML = device.uuid;\n' +
+'  document.getElementById("name").innerHTML = device.name;\n' +
+'  document.getElementById("width").innerHTML = screen.width;\n' +
+'  document.getElementById("height").innerHTML = screen.height;\n' +
+'}\n' +
+'\n' +
+'// Select thid line and right click on it to execute the function!\n' +
+'// displayDeviceInfo();\n';

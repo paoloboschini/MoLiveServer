@@ -114,6 +114,10 @@
           // console.log('attribute:', attribute);
           // console.log('currentWidget:', currentWidget);
 
+          if(attribute == 'width') {
+            keywords.push('FILL_AVAILABLE_SPACE');
+          }
+
           // Add values of current attribute of current widget
           for (i = 0; i < widgets.length; i++) {
             if(widgets[i].name == currentWidget) {
