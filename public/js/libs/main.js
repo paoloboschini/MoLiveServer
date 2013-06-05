@@ -81,20 +81,24 @@
     //
     // Set up templates dropdown
     // 
-    $('#nativeTemplate').click(function(e) {
+    $('#templateList li a').click(function(e) {
       e.preventDefault();
-      htmlCodeMirror.setValue(nativeHtmlTemplate);
-      jsCodeMirror.setValue(nativeJavaScriptTemplate);
-    });
-    $('#webTemplate').click(function(e) {
-      e.preventDefault();
-      htmlCodeMirror.setValue(webHtmlTemplate);
-      jsCodeMirror.setValue(webJavaScriptTemplate);
-    });
-    $('#gettingStartedTemplate').click(function(e) {
-      e.preventDefault();
-      htmlCodeMirror.setValue(gettingStartedHtmlTemplate);
-      jsCodeMirror.setValue(gettingStartedJavaScriptTemplate);
+      var el = $(this)[0];
+      var type = $(el).attr('href');
+
+      showLoadIndicator();
+      $.ajax({
+        url: '/template',
+        type: 'POST',
+        data: {type : type},
+        cache: false,
+        timeout: 10000,
+        success: function(response) {
+          hideLoadIndicator();
+          htmlCodeMirror.setValue(response.html);
+          jsCodeMirror.setValue(response.js);
+        } // success
+      }); // ajax      
     });
 
     //-------------------------------------------------------

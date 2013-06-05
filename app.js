@@ -282,7 +282,7 @@ app.post('/upload', function(req, res){
 /**
  * Return server ip address
  */
-app.post('/serverip', function(req,res) {
+app.post('/serverip', function(req, res) {
   // Get the server ip
   var net = require('net');
   var _socket = net.createConnection(80, "www.google.com");
@@ -294,6 +294,17 @@ app.post('/serverip', function(req,res) {
   _socket.on('error', function (e) {
     res.send('Error');
   });
+});
+
+/**
+ * Return a template. For now we read file synchronously.
+ * Make it async later to follow NodeJS convention.
+ */
+app.post('/template', function(req, res) {
+  var path = __dirname + '/templates/' + req.body.type;
+  var html = fs.readFileSync(path + '/html.html', 'utf8');
+  var js = fs.readFileSync(path + '/js.js', 'utf8');
+  res.send({html: html, js: js});
 });
 
 /**
