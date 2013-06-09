@@ -177,7 +177,7 @@ h1 {
   color:white;
 }
 
-#fileSavedFlashMessage {
+#flashMessage {
   display: none;
   position: absolute;
   color: white;

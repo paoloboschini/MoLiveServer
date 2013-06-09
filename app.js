@@ -154,6 +154,33 @@ app.configure(function(){
 });
 
 /**
+ * Routing that responds to an ajax request for creating a new gist.
+ */
+app.post('/newgist', function(req, res){
+  var description = req.body.description;
+
+  github.gists.create({
+    'description': description,
+    'public': true,
+    'files': {
+      'html.html': {
+        'content': '...'
+      },
+      'js.js': {
+        'content': '...'
+      }
+    }
+  }, function(err, data) {
+    if (err) {
+      res.send({error:err.message});
+    } else {
+      res.send({description: data.description, id: data.id});
+    }
+  }
+);
+});
+
+/**
  * Routing that responds to an ajax request for retrieving the gists
  * of a specific user. Returns the id and the description for each gist.
  */

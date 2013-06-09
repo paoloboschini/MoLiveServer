@@ -144,6 +144,40 @@
 
     //-------------------------------------------------------
     //
+    // Create a new gist
+    //
+    $('#newGist').click(function(e) {
+      e.preventDefault();
+      $('#newGistModal').modal('toggle');
+    });
+
+    $('#newGistModalSave').click(function(e) {
+      showLoadIndicator();
+      var description = $('#inputGistDescription').val();
+      $.ajax({
+        url: '/newgist',
+        type: 'POST',
+        data: {description: description},
+        timeout: 10000,
+        cache: false,
+        success: function(response) {
+          hideLoadIndicator();
+          if (response.id) {
+            $('#gistsList').append('<li><a class="gistElement" href="' + response.id + '">' + response.description + '</a></li>');
+            showFlashMessage('New Gist created!');
+
+            // choose the new created gist
+            $('a[href="' + response.id + '"]').click();
+
+          } else {
+            showFlashMessage(response.error);
+          }
+        } // success
+      }); // ajax
+    });
+
+    //-------------------------------------------------------
+    //
     // When choosing a gist, fetch the files
     // 
     $(document).on('click', '.gistElement', function(e) {
@@ -400,7 +434,7 @@
     // Get a confirmation that the gist file was saved
     // 
     socket.on('fileSaved', function() {
-      showMessageFileSaved();
+      showFlashMessage('File saved!');
     });
 
     //-------------------------------------------------------
@@ -526,7 +560,7 @@
           .text(data.filename+' ')
           .append('<span class="caret" style="margin-top: 8px;"></span>');
       }
-      showMessageFileSaved();
+      showFlashMessage('File created!');
     });
 
 
@@ -605,10 +639,11 @@
     });
 
     // When a gist file is saved, give feedback to the user
-    function showMessageFileSaved() {
+    function showFlashMessage(message) {
       hideLoadIndicator();
-      $('#fileSavedFlashMessage').fadeIn(1000, function() {
-        $('#fileSavedFlashMessage').fadeOut(3000);
+      $('#flashMessage').html(message);
+      $('#flashMessage').fadeIn(1000, function() {
+        $('#flashMessage').fadeOut(3000);
       });
     }
 
