@@ -20,8 +20,8 @@
 
   socket.on('javascript', function(code) {
     try {
-      mosync.nativeui.callBackTable = {};
-      mosync.nativeui.eventCallBackTable = {};
+      // mosync.nativeui.callBackTable = {};
+      // mosync.nativeui.eventCallBackTable = {};
       console.log('Code evaluate on mobile:' + code);
       // execute eval in the global scope
       eval.call(window, code);
@@ -32,6 +32,16 @@
       console.log('error catch mobile:', e);
       socket.emit('mobilelog', e.message);
     }
+
+    // clean up "Clicked" events added to widgets by leaving
+    // only the last one
+    var table = mosync.nativeui.eventCallBackTable;
+    for(var k in table) {
+      if(k.indexOf('Clicked') != -1) {
+        table[k] = table[k].slice(-1);
+      }
+    }
+
   });
 
   socket.on('reset', function() {
