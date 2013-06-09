@@ -195,8 +195,8 @@
           $('#htmlToggleButton').removeClass('disabled');
           //$('#savecode').removeClass('disabled').removeClass('btn-info');
 
-          $('#htmlList').append('<li><a id="newHtmlFile" href="asd">New HTML File...</a></li>');
-          $('#jsList').append('<li><a id="newJSFile" href="asd">New JS File...</a></li>');
+          $('#htmlList').append('<li><a id="newHtmlFile">New HTML File...</a></li>');
+          $('#jsList').append('<li><a id="newJSFile">New JS File...</a></li>');
 
           $.each(response.htmlfiles, function(index, value) {
             $('#htmlList').append('<li><a class="htmlFile" href="' + value.id + '">' + value.filename + '</a></li>');
