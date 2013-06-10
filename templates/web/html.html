@@ -4,6 +4,30 @@
     <meta name="viewport" content="width=320, user-scalable=no">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>Wormhole Template App</title>
+    <style>
+      #info {
+        font-family: helvetica;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+      #heading {
+        color: white;
+        background-color: #304da7;
+        padding: 18px;
+        text-align: center;
+        font-family: helvetica;
+        font-size: 18px;
+      }
+      .button {
+        color: white;
+        background-color: #304da7;
+        margin-top: 20px;
+        text-align: center;
+        padding: 18px;
+        font-family: helvetica;
+        font-size: 18px;
+      }
+    </style>
   </head>
   <body>
     <div id="screen">
@@ -16,7 +40,7 @@
         <div>Width: <span id="width"></span></div>
         <div>Height: <span id="height"></span></div>
       </div>
-      <div onclick='changeColor()'>Change Color</div>
+      <div class='button' onclick='changeColor()'>Change Color</div>
     </div>
   </body>
-</html>;
+</html>

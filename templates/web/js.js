@@ -1,14 +1,9 @@
-/*
-var btn = document.getElementById('change');
-btn.addEventListener('click', function() {
-  changeColor();
-}, false);
+// You can select/mark arbitraty piece of code and right click
+// on the selection to execute it in the current JavaScript runtime
+// on the connected phones.
 
-function changeColor() {
-  document.documentElement.style.backgroundColor = "white";
-  document.body.style.backgroundColor = "white";
-}
-*/
+// Try to select "changeColor()" or "displayDeviceInfo()"
+// and right click on the selection to execute the functions!
 
 function changeColor() {
   var color = "#" +
@@ -26,6 +21,3 @@ function displayDeviceInfo() {
   document.getElementById("width").innerHTML = screen.width;
   document.getElementById("height").innerHTML = screen.height;
 }
-
-// Select thid line and right click on it to execute the function!
-// displayDeviceInfo();
