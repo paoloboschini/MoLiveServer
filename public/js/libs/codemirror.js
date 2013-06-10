@@ -213,6 +213,7 @@ var codemirror = (function() {
 
   function firstLevelActiveNode() {
     var code = jsCodeMirror.getValue();
+    var functionName;
 
     // If there is an error, stop parsing
     // JSHINT(code, {smarttabs: true});
@@ -225,26 +226,53 @@ var codemirror = (function() {
 
     // parse the program to a node program
     var program = acorn.parse(code, {locations: true, ranges: true});
+    console.log('program:', program);
 
     // get the position of the cursor, specified as index(int) of
     // the total characters from start to caret (and not as {line,ch})
     var pos = jsCodeMirror.indexFromPos(jsCodeMirror.getCursor());
     for (var i = 0; i < program.body.length; i++) {
-      var startIndexNode = program.body[i].start;
-      var endIndexNode = program.body[i].end;
 
-      if(program.body[i].type == 'VariableDeclaration') {
-        endIndexNode++;
-      }
+      var node = program.body[i];
+      var startIndexNode = node.start;
+      var endIndexNode = node.end;
+      var nodeType = node.type;
+      console.log('nodeType:', nodeType);
 
       var startNode = jsCodeMirror.posFromIndex(startIndexNode);
       var endNode = jsCodeMirror.posFromIndex(endIndexNode);
 
       if (pos >= startIndexNode && pos <= endIndexNode) {
+
+        if(nodeType == 'VariableDeclaration') {
+          endIndexNode++;
+          variableInitializationType = node.declarations[0].init.type;
+          if(variableInitializationType == 'FunctionExpression') {
+            functionName = node.declarations[0].id.name;
+          }
+        }
+
+        if(nodeType == 'FunctionDeclaration') {
+          functionName = node.id.name;
+        }
+
+        if(nodeType == 'ExpressionStatement') {
+          var left = node.expression.left;
+          var right = node.expression.right;
+          if(left) {
+            if(right.type == 'FunctionExpression') {
+              var startLeft = jsCodeMirror.posFromIndex(left.start);
+              var endLeft = jsCodeMirror.posFromIndex(left.end);
+              functionName = jsCodeMirror.getRange(startLeft, endLeft);
+            }
+          }
+        }
+
         return {
           start: startNode,
           end: endNode,
-          content: jsCodeMirror.getRange(startNode, endNode)
+          content: jsCodeMirror.getRange(startNode, endNode),
+          functionName: functionName
         };
       }
     }
@@ -272,6 +300,9 @@ var codemirror = (function() {
           var node = firstLevelActiveNode();
           if (node) {
             socket.emit(codeType, node.content);
+            if(node.functionName) {
+              socket.emit(codeType, node.functionName + '()');
+            }
           }
         } else {
           socket.emit(codeType, editor.getValue());
