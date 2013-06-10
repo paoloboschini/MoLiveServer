@@ -96,9 +96,12 @@
         <% var event = jsEvents[i]; %>
         <div class='accordion-group' style='margin:10px;'>
           <div class='accordion-heading'>
-            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'>
-              <%= event.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
-            </a>
+            <!-- <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'> -->
+              <div style='padding: 8px 15px;'>
+                <span style='color:#0088cc'><%= event.name %></span>
+                <span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
+              </div>
+            <!-- </a> -->
           </div>
         </div>
       <% } %> <!-- for i -->
@@ -111,9 +114,12 @@
         <% var event = jsEvents[i]; %>
         <div class='accordion-group' style='margin:10px;'>
           <div class='accordion-heading'>
-            <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'>
-              <%= event.name %><span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
-            </a>
+            <!-- <a class='accordion-toggle' style='text-decoration:none;' data-toggle='collapse' data-parent='#events' href='#<%= event.name %>'> -->
+              <div style='padding: 8px 15px;'>
+                <span style='color:#0088cc'><%= event.name %></span>
+                <span style='color:gray;font-style:italic;'>&nbsp;&nbsp;&nbsp;<%= event.description %></span>
+              </div>
+            <!-- </a> -->
           </div>
         </div>
       <% } %> <!-- for i -->

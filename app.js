@@ -343,7 +343,6 @@ io.sockets.on('connection', function(socket) {
 
   // Send the edited code to github to update the gist file
   socket.on('saveFileGist', function(data) {
-    console.log('data:', data);
     var newFile = data['new'];
     var filename = data.filename;
     var type = data.type;
@@ -356,8 +355,6 @@ io.sockets.on('connection', function(socket) {
     // without '...' in the content, the file is deleted or not created 
     temp.files[filename]['content'] = data.code === '' ? '...' : data.code;
 
-    console.log('data.code: ---' + data.code + '---');
-
     github.gists.edit(temp, function(err, data) {
       if (err) {
         console.log(err);
@@ -366,9 +363,9 @@ io.sockets.on('connection', function(socket) {
         console.log('file saved! >>> ' + filename);
         console.log('newFile:', newFile);
         if(newFile) {
-          io.sockets.in('webapp').emit('filecreated', {id : currentSelectedGistId, filename : filename, type : type});
+          io.sockets.in('webapp').emit('gistFileCreated', {id : currentSelectedGistId, filename : filename, type : type});
         } else {
-          io.sockets.in('webapp').emit('fileSaved');
+          io.sockets.in('webapp').emit('gistFileSaved');
         }
       }
     });
@@ -384,10 +381,6 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('downloadResourceFromWeb', function(data) {
     io.sockets.in('mobile').emit('downloadResourceFromWeb', data);
-  });
-
-  socket.on('fileSaved', function() {
-    io.sockets.in('webapp').emit('fileSaved');
   });
 
   socket.on('resourceSaved', function(message) {
