@@ -49,23 +49,23 @@
       } // success
     }); // ajax
 
-    codemirror.setSocket(socket);
-    var htmlCodeMirror = codemirror.initHtmlCodeMirror();
-    var jsCodeMirror = codemirror.initJSCodeMirror();
+    myCodeMirrors.setSocket(socket);
+    var htmlCodeMirror = myCodeMirrors.initHtmlCodeMirror();
+    var jsCodeMirror = myCodeMirrors.initJSCodeMirror();
 
     //-------------------------------------------------------
     //
     // Set up number pickers
     // 
-    numberPicker.numberPicker(htmlCodeMirror, $('#inletSliderHtml'));
-    numberPicker.numberPicker(jsCodeMirror, $('#inletSliderJS'));
+    numberPicker.init(htmlCodeMirror, $('#inletSliderHtml'));
+    numberPicker.init(jsCodeMirror, $('#inletSliderJS'));
 
     //-------------------------------------------------------
     //
     // Set up color pickers
     // 
-    colorPicker.colorPicker(htmlCodeMirror, 'htmlColorPicker');
-    colorPicker.colorPicker(jsCodeMirror, 'jsColorPicker');
+    colorPicker.init(htmlCodeMirror, 'htmlColorPicker');
+    colorPicker.init(jsCodeMirror, 'jsColorPicker');
 
     //-------------------------------------------------------
     //
@@ -117,10 +117,12 @@
         timeout: 10000,
         success: function(response) {
           hideLoadIndicator();
-          // if (response.error) {
-          //   alert(response.error);
-          //   return;
-          // }
+
+          if (response.error) {
+            alert(response.error);
+            return;
+          }
+
           $.each(response, function(index, value) {
             $('#gistsList').append('<li><a class="gistElement" href="' + value.id + '">' + value.description + '</a></li>');
           });
@@ -305,7 +307,7 @@
       //   socket.emit('javascript', scripts[i].innerHTML);
       // }
 
-      // emit javascript from js codemirror
+      // emit javascript from js myCodeMirrors
       var js = jsCodeMirror.getValue();
       socket.emit('javascript', js);
 
@@ -594,7 +596,7 @@
 
     //-------------------------------------------------------
     //
-    // Enable resizing the container of codemirrors
+    // Enable resizing the container of myCodeMirrorss
     //
     $('#editors').resizable({handles: 's'});
     $('#codeMirrorHtmlContainer').resizable({

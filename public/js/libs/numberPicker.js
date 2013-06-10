@@ -1,7 +1,7 @@
 var numberPicker = (function() {
 
   var numberPicker = {};
-  numberPicker.numberPicker = function(editor, sliderDiv) {
+  numberPicker.init = function(editor, sliderDiv) {
     var widthSlider = sliderDiv.css('width');
 
     var slider = $(sliderDiv.children(":first")[0]);
@@ -143,10 +143,10 @@ var numberPicker = (function() {
     //   var element = document.elementFromPoint(x, y);
     //   $(element).parents().each(function(i, el) {
     //     if (el.id == 'codeMirrorHtmlContainer') {
-    //       localEditor = codemirror.htmlCodeMirror;
+    //       localEditor = myCodeMirrors.htmlCodeMirror;
     //     }
     //     if (el.id == 'codeMirrorJsContainer') {
-    //       localEditor = codemirror.jsCodeMirror;
+    //       localEditor = myCodeMirrors.jsCodeMirror;
     //     }
     //   });
 

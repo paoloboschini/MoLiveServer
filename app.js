@@ -48,18 +48,6 @@ var nextUserId = 1;
 var usersByGhId = {};
 var usersById = {};
 
-/* More compact version of addUser, less clear */
-/*
-function addUser(source, sourceUser, token) {
-  var user;
-  user = usersById[nextUserId] = {id: nextUserId};
-  user['token'] = token;
-  user[source] = sourceUser;
-  nextUserId++;
-  return user;
-}
-*/
-
 /**
  * Add a new new connected user to the list usersById.
  */
@@ -94,9 +82,6 @@ app.configure(function(){
   app.engine('html', require('ejs').renderFile);
   app.use(express.static(__dirname + '/public'));
   app.use(everyauth.middleware(app));
-
-  // http://stackoverflow.com/questions/8378338/what-does-connect-js-methodoverride-do
-  // app.use(express.methodOverride());
 });
 
 /**
@@ -116,7 +101,6 @@ app.configure(function(){
             token: req.user.token
         });
       } else {
-        // We are authenticated!
         console.log('We are authenticated! ' + data);
       }
     });
@@ -151,10 +135,10 @@ app.configure(function(){
     jsMethods: require('./documentation/methods').methods
     // octocat: octocat
   });
-});
+}); // app.get...
 
 /**
- * Routing that responds to an ajax request for creating a new gist.
+ * Ajax request for creating a new gist.
  */
 app.post('/newgist', function(req, res){
   var description = req.body.description;
@@ -163,12 +147,8 @@ app.post('/newgist', function(req, res){
     'description': description,
     'public': true,
     'files': {
-      'html.html': {
-        'content': '...'
-      },
-      'js.js': {
-        'content': '...'
-      }
+      'html.html': { 'content': '...' },
+      'js.js': { 'content': '...' }
     }
   }, function(err, data) {
     if (err) {
@@ -176,13 +156,12 @@ app.post('/newgist', function(req, res){
     } else {
       res.send({description: data.description, id: data.id});
     }
-  }
-);
+  });
 });
 
 /**
- * Routing that responds to an ajax request for retrieving the gists
- * of a specific user. Returns the id and the description for each gist.
+ * Ajax request for retrieving the gists of a specific user.
+ * Returns the id and the description for each gist.
  */
 app.post('/gists', function(req, res){
   var user = req.body.user;
@@ -200,8 +179,8 @@ app.post('/gists', function(req, res){
 });
 
 /**
- * Get gists from a specific user. Calls a callback with the retrieved
- * data.
+ * Get gists from a specific user.
+ * Calls a callback with the retrieved data.
  */
 function getGistsOfUser(user, callback) {
   github.gists.getFromUser({
@@ -212,9 +191,9 @@ function getGistsOfUser(user, callback) {
 }
 
 /**
- * Routing that responds to an ajax request for retrieving a specific
- * gist from a gist id. Returns an object that contains the html and JS
- * files contained in the specified gist.
+ * Ajax request for retrieving a specific gist from a gist id.
+ * Returns an object that contains the html and JS files
+ * contained in the specified gist.
  */
 app.post('/gist', function(req, res){
   currentSelectedGistId = req.body.id;
@@ -223,9 +202,11 @@ app.post('/gist', function(req, res){
     id: currentSelectedGistId
   }, function(err, data) {
     if (err) {
+      res.send({error:err.message});
       console.log(err);
       return;
     }
+
     var files = data.files;
     var htmlFiles = [];
     var jsFiles = [];
@@ -258,8 +239,8 @@ app.post('/gist', function(req, res){
 });
 
 /**
- * Routing that responds to an ajax request for retrieving a specific
- * file from a gist. Returns the content of the file.
+ * Ajax request for retrieving a specific file from a gist.
+ * Returns the content of the file.
  */
 app.post('/file', function(req, res){
   var file = req.body.filename;
@@ -268,9 +249,11 @@ app.post('/file', function(req, res){
     id: currentSelectedGistId
   }, function(err, data) {
     if (err) {
+      res.send({error:err.message});
       console.log('github.gists.get, ' + err);
       return;
     }
+
     var files = data.files;
     var content = (files[file]).content;
     res.send(content);
@@ -278,8 +261,7 @@ app.post('/file', function(req, res){
 });
 
 /**
- * Routing that responds to the mobile device where the app is to be
- * rendered.
+ * Mobile device view for rendering the developed app.
  */
 app.get('/mobile', function(req, res){
     res.render('mobile.ejs', {
@@ -287,9 +269,11 @@ app.get('/mobile', function(req, res){
     });
 });
 
+/**
+ * Ajax request for uploading a file to the server.
+ * Returns the name of the file.
+ */
 app.post('/upload', function(req, res){
-  console.log(req.files);
-
   var path = require('path');
   if (!path.existsSync(__dirname + '/public/uploads')) {
     fs.mkdir(__dirname + '/public/uploads');
@@ -310,7 +294,6 @@ app.post('/upload', function(req, res){
  * Return server ip address
  */
 app.post('/serverip', function(req, res) {
-  // Get the server ip
   var net = require('net');
   var _socket = net.createConnection(80, "www.google.com");
   _socket.on('connect', function () {
