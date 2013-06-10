@@ -594,10 +594,26 @@
 
     //-------------------------------------------------------
     //
-    // Enable resizing the container of codemirrors with the
-    // s(outh) handle
+    // Enable resizing the container of codemirrors
     //
     $('#editors').resizable({handles: 's'});
+    $('#codeMirrorHtmlContainer').resizable({
+      handles: 'e',
+      resize: function(event, ui) {
+        var offsetWidth = ui.originalSize.width - ui.size.width;
+        $('#codeMirrorJsContainer').width(offsetWidth + this.jsOriginalWidth);
+      },
+      start: function(event, ui) {
+        this.jsOriginalWidth = $('#codeMirrorJsContainer').width();
+      },
+      stop: function(event, ui) {
+        this.jsOriginalWidth = $('#codeMirrorJsContainer').width();
+      }
+    });
+
+    $(window).resize(function () {
+      $('#codeMirrorJsContainer').width($(document.body).width() - $('#codeMirrorHtmlContainer').width() - 1);
+    });
 
     //-------------------------------------------------------
     //
