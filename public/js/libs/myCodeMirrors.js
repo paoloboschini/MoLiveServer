@@ -121,14 +121,13 @@ var myCodeMirrors = (function() {
   }; // myCodeMirrorss.initJsCm
 
   /**
-   * Define onChange for each editor
+   * Send the changed code to the mobile target.
    */
   function onChange(cm, codeType, toggleButtonName) {
     cm.on('change', function(editor, change) {
 
       if ($('#autoload').is(':checked')) {
 
-        // JSHINT(jsCodeMirror.getValue(), {smarttabs: true});
         myCodeMirrors.hintString(jsCodeMirror.getValue());
         var errors = JSHINT.data().errors;
 
@@ -168,20 +167,9 @@ var myCodeMirrors = (function() {
 
   //-------------------------------------------------------
   //
-  // Acorn
-  // Rules: 1. If node is a program get the last statement/node
-  //        2. If node is a literal get the node around by passing
-  //           the (start of the literal node - 1) to find the VariableDeclaration
-  //        3. If node is a block, find the function declaration
-  //           togheter with the body. PROBLEM: when changing a 
-  //           function declaration we should execute all the calls
-  //           to that function!
-  //           
-  //
   // Depending on where we are with the cursor we want to extract the
-  // surrounding statement to executing it, a la Smalltalk. Also, add
-  // a feature so that the user can select e portion of the text and
-  // execute it.
+  // surrounding statement to executing it, a la Smalltalk.
+  // 
   function onCursorActivity(cm) {
     cm.on('cursorActivity', function(cm) {
       if ($('#autoload').is(':checked')) {
@@ -226,7 +214,7 @@ var myCodeMirrors = (function() {
 
     // parse the program to a node program
     var program = acorn.parse(code, {locations: true, ranges: true});
-    console.log('program:', program);
+    // console.log('program:', program);
 
     // get the position of the cursor, specified as index(int) of
     // the total characters from start to caret (and not as {line,ch})
@@ -237,13 +225,11 @@ var myCodeMirrors = (function() {
       var startIndexNode = node.start;
       var endIndexNode = node.end;
       var nodeType = node.type;
-      console.log('nodeType:', nodeType);
 
       var startNode = jsCodeMirror.posFromIndex(startIndexNode);
       var endNode = jsCodeMirror.posFromIndex(endIndexNode);
 
       if (pos >= startIndexNode && pos <= endIndexNode) {
-
         if(nodeType == 'VariableDeclaration') {
           endIndexNode++;
           variableInitializationType = node.declarations[0].init.type;
@@ -278,6 +264,10 @@ var myCodeMirrors = (function() {
     }
   }
 
+  //-------------------------------------------------------
+  //
+  // Remove marker when clicking on the live checkbox
+  //   
   $(function() {
     $('#autoload').click(function() {
       if (!$('#autoload').is(':checked')) {
@@ -286,10 +276,11 @@ var myCodeMirrors = (function() {
     });
   });
 
-  /**
-   * Emit code through the socket.
-   * This function is bound to any change made to the code editors.
-   */
+   //-------------------------------------------------------
+   //
+   // Emit code through the socket.
+   // This function is bound to any change made to the code editors.
+   //   
   var latencyFromLastPress = 100;
   function emitCode(codeType, editor, executeEverything) {
     lastKeypress = new Date().getTime();

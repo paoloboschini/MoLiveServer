@@ -61,7 +61,6 @@ var numberPicker = (function() {
       showNumberPicker(cm);
     }
 
-    // Code for numberPicker
     function showNumberPicker(cm) {
       var cur = cm.getCursor();
       var pos = cm.cursorCoords();

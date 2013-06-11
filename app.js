@@ -129,7 +129,7 @@ app.configure(function(){
   // var octocat = octocats[Math.floor(Math.random()*octocats.length)];
 
   res.render('index.ejs', {
-    title: 'Live!',
+    title: 'MoLive!',
     widgets: require('./documentation/widgets').widgets,
     jsEvents: require('./documentation/events').events,
     jsMethods: require('./documentation/methods').methods

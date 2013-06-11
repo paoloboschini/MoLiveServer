@@ -96,9 +96,20 @@
       <% } %>
     </div>
 
-    <div id='rightHeader'>
+    <div id='rightHeader' >
+      
       <% include authentication %>
-    </div>
+      
+      <div style='float:right;height:50px;'>
+        <div style='float:left;margin:25px 5px 0 0;'>
+          <p id='serverip' style='color:white;'>Server IP: </p>
+        </div>
+
+        <button id='feedback' class='btn btn-primary' style='margin-top:20px;'>Feedback</button>
+        <button id='downloadResource' class='btn btn-primary' style='margin-top:20px;margin-right:5px'>Add Resource</button>
+      </div>
+    </div> <!-- rightHeader -->
+
   </div> <!-- header div -->
 
   <!-- editors div -->

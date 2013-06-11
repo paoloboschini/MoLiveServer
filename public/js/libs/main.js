@@ -5,8 +5,7 @@
 
   //-------------------------------------------------------
   //
-  // On connection to server tell the server I want to be in
-  // the webapp room
+  // Register to webapp room
   // 
   socket.on('connect', function() {
     socket.emit('room', 'webapp');
@@ -32,7 +31,6 @@
     console.error("Mobile device log:", message);
   });
 
-
   //-------------------------------------------------------
   //
   // On load of page
@@ -49,6 +47,10 @@
       } // success
     }); // ajax
 
+    //-------------------------------------------------------
+    //
+    // Set up codemirrors
+    // 
     myCodeMirrors.setSocket(socket);
     var htmlCodeMirror = myCodeMirrors.initHtmlCodeMirror();
     var jsCodeMirror = myCodeMirrors.initJSCodeMirror();

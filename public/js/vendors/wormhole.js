@@ -4935,12 +4935,12 @@ mosync.MAW_BUTTON_FONT_SIZE = "fontSize";
 * @par Example
 * \code
 *	int nrFonts = maFontGetCount();
-*	 char buf[256];
-*	 // Get first font name.
-*	 maFontGetName(1, buf, 256);
-*	 // Load that font for size 10.
-*	 int fontHandle = maFontLoadWithName(buf, 10);
-*	 // Set that font to the label.
+* char buf[256];
+* // Get first font name.
+* maFontGetName(1, buf, 256);
+* // Load that font for size 10.
+* int fontHandle = maFontLoadWithName(buf, 10);
+* // Set that font to the label.
 *	maWidgetSetProperty(buttonHandle, MAW_BUTTON_FONT_HANDLE, toString(fontHandle));
 * \endcode
 */
