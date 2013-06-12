@@ -280,11 +280,16 @@ app.post('/upload', function(req, res){
   }
 
   fs.readFile(req.files.savefile.path, function (err, data) {
-    var newPath = __dirname + '/public/uploads/' + req.files.savefile.name;
+
+    // needs to remove whitespaces (replace with _), since the
+    // file name is going to be used as an URL by the mobile
+    var filename = req.files.savefile.name.replace(/ /g,'_');
+
+    var newPath = __dirname + '/public/uploads/' + filename;
     console.log(newPath);
     fs.writeFile(newPath, data, function (err) {
       console.log(err);
-      res.send(req.files.savefile.name);
+      res.send(filename);
     });
   });
 
@@ -383,8 +388,8 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in('mobile').emit('downloadResourceFromWeb', data);
   });
 
-  socket.on('resourceSaved', function(message) {
-    io.sockets.in('webapp').emit('resourceSaved', message);
+  socket.on('resourceSaved', function(message, filename) {
+    io.sockets.in('webapp').emit('resourceSaved', message, filename);
   });
 
   socket.on('getListResources', function() {

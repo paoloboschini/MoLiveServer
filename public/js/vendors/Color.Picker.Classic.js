@@ -230,15 +230,11 @@ Color.Picker = function (props) {
 	/// helper functions
 
 	this.update = function(color) { // accepts HEX, RGB, and HSV
-		console.log('color in update:', color);
 		if (typeof(color) === "string") {
-			console.log('string');
 			that.color = Color.Space(color, "STRING>HEX>RGB>HSV");
 		} else if (typeof(color.R) !== "undefined") {
-			console.log('color.R undefined');
 			that.color = Color.Space(color, "RGB>HSV");
 		} else if (typeof(color.H) !== "undefined") {
-			console.log('color.H undefined');
 			that.color = color;
 		}
 		///

@@ -93,7 +93,7 @@
       'http://' + _serverip + ':5678/uploads/' + filename,
       filename
     ], function(message) {
-      socket.emit('resourceSaved', message);
+      socket.emit('resourceSaved', message, filename);
     });
   });
 
@@ -104,7 +104,7 @@
       data.url,
       data.filename
     ], function(message) {
-      socket.emit('resourceSaved', message);
+      socket.emit('resourceSaved', message, data.filename);
     });
   });
 

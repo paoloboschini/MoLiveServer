@@ -208,7 +208,7 @@
     // 
     $('#resourceModalSave').click(function() {
       socket.emit('downloadResourceFromWeb', {url : $('#inputUrlResource').val(), filename : $('#inputFilenameResource').val() });
-      CodeMirror.resourceImages().push('resources/' + response);
+      LiveUtils.showFlashMessage('Downloading resource...', 10000);
     });
 
     //-------------------------------------------------------
@@ -235,6 +235,7 @@
     // 
     $('#upload').submit(function(e) {
       e.preventDefault();
+      LiveUtils.showFlashMessage('Downloading resource...');
 
       $(this).ajaxSubmit({
         success: function(response) {
@@ -242,11 +243,8 @@
             status('Opps, something bad happened');
             return;
           }
-          // alert('file uploaded!');
           $('#downloadResourceModal').modal('hide');
           socket.emit('downloadResourceFromServer', response);
-
-          CodeMirror.resourceImages().push('resources/' + response);
         }
       });
 
@@ -258,7 +256,8 @@
     // Alert the user with the result of an attempt to save
     // a new file resurce on the device
     // 
-    socket.on('resourceSaved', function(message) {
+    socket.on('resourceSaved', function(message, filename) {
+      CodeMirror.resourceImages().push('resources/' + filename);
       LiveUtils.showFlashMessage(message);
     });
 
@@ -359,12 +358,16 @@ var LiveUtils = (function() {
   var LiveUtils = {};
 
   // When a gist file is saved, give feedback to the user
-  LiveUtils.showFlashMessage = function(message) {
+  LiveUtils.showFlashMessage = function(message, duration) {
     LiveUtils.hideLoadIndicator();
     $('#flashMessage').html(message);
-    $('#flashMessage').fadeIn(1000, function() {
-      $('#flashMessage').fadeOut(3000);
-    });
+    if(duration) {
+      $('#flashMessage').fadeIn(1000);
+    } else {
+      $('#flashMessage').fadeIn(1000, function() {
+        $('#flashMessage').fadeOut(3000);
+      });
+    }
   };
 
   // helper functions to show and hide a load indicator
