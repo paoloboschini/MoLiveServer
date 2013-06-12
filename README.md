@@ -47,8 +47,8 @@ The system can be used in different ways:
 
 [1]: http://www.mosync.com/
 [2]: http://nodejs.org/
-[3]: https://github.com/paoloboschini/Live
+[3]: https://github.com/paoloboschini/MoLive
 [4]: https://localhost:5678
-[5]: https://github.com/paoloboschini/Live/blob/master/AndroidPackage/Live.apk
+[5]: https://github.com/paoloboschini/MoLive/blob/master/AndroidPackage/Live.apk
 [6]: http://www.mosync.com/
 [7]: http://www.youtube.com
