@@ -17,7 +17,11 @@
   socket.on('html', function(code) {
     // console.log('html code evaluated:' + code);
 
-    reset();
+    // reset mosync
+    mosync.nativeui.callBackTable = {};
+    mosync.nativeui.eventCallBackTable = {};
+    mosync.nativeui.numWidgetsRequested = 0;
+    window.clearInterval(mosync.nativeui.showInterval);
 
     document.open();
     document.write(code);
@@ -64,10 +68,6 @@
     mosync.nativeui.destroyAll();
     mosync.bridge.send(['Custom', 'restoreWebView']);
     mosync.bridge.send(['Custom', 'restoreWebView']);
-    mosync.nativeui.callBackTable = {};
-    mosync.nativeui.eventCallBackTable = {};
-    mosync.nativeui.numWidgetsRequested = 0;
-    window.clearInterval(mosync.nativeui.showInterval);
   }
 
   //-------------------------------------------------------

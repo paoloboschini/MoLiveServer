@@ -400,7 +400,9 @@
     ]
   },
   { "name":"RelativeLayout",
-    "properties": []
+    "properties": [
+      { "name":"scrollable", "values": ["true","false"] }
+    ]
   },
   { "name":"Screen",
     "properties": [
@@ -457,7 +459,8 @@
       { "name":"paddingTop", "values": [] },
       { "name":"paddingLeft", "values": [] },
       { "name":"paddingRight", "values": [] },
-      { "name":"paddingBottom", "values": [] }
+      { "name":"paddingBottom", "values": [] },
+      { "name":"scrollable", "values": ["true","false"] }
     ]
   },
   { "name":"VideoView",
