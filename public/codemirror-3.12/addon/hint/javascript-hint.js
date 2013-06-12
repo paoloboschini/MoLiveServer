@@ -101,7 +101,7 @@
   var funcProps = "prototype apply call bind".split(" ");
   var javascriptKeywords = ("break case catch continue debugger default delete do else false finally for function " +
                             "if in instanceof new null return switch throw true try typeof var void while with").split(" ");
-  var mosyncKeywords = ("mosync.nativeui.create document.getElementById document.getNativeElementBy mosync.nativeui.setWebViewHandle " +
+  var mosyncKeywords = ("mosync.nativeui.create document.getElementById document.getNativeElementById mosync.nativeui.setWebViewHandle " +
                         "mosync.nativeui.mainWebViewId mosync.nativeui.getMainWebViewId mosync.nativeui.getNativeHandleById " +
                         "mosync.nativeui.MAIN_WEBVIEW mosync.nativeui.callJS mosync.nativeui.UIReady mosync.nativeui.initUI").split(" ");
   var widgetProps = ("addChild addEventListener addTo childList clone commandQueue eventQueue getProperty id insertChild " +
