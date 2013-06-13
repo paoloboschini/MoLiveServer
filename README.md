@@ -2,9 +2,16 @@
 
 This is a web application for creating and editing mobile applications live with support for both web technologies (HTML5/JavaScript) and the [MoSync][1] SDK for creating Native UI applications using JavaScript and/or accessing services on a mobile device through HTML5/JavaScript.
 
+##Feedback##
+
+I am doing this project for my Master's Thesis at Uppsala University, Sweden.
+It takes 5-10 minutes to download and try out the tool. Give it a go and let me know what you think!
+You can click [here][7] to fill out a form.
+I will be very happy to get your feedback! :)
+
 ##Screencast##
 
-Check this [video][7] for a demonstration on how to use this application.
+Check this [video][6] for a demonstration on how to use this application.
 
 ##Installation##
 
@@ -16,7 +23,7 @@ Check this [video][7] for a demonstration on how to use this application.
 
 Note 1: if you don't want to build the Live Mobile App yourself, you can download the Android package [Live.apk][5] and install it on your mobile device. You can download it right from you Android mobile by opening this page from you mobile browser and click on the [Live.apk][5] link.
 
-Note 2: For iOS and Windows Phone you need to compile the mobile app yourself using the [MoSync SDK][6] and install it on your mobile device.
+Note 2: For iOS and Windows Phone you need to compile the mobile app yourself using the [MoSync SDK][1] and install it on your mobile device.
 
 ##Usage##
 The system can be used in different ways:
@@ -50,5 +57,5 @@ The system can be used in different ways:
 [3]: https://github.com/paoloboschini/MoLive
 [4]: https://localhost:5678
 [5]: https://github.com/paoloboschini/MoLive/blob/master/AndroidPackage/Live.apk
-[6]: http://www.mosync.com/
-[7]: http://www.youtube.com
+[6]: http://www.youtube.com/watch?v=uqsxRTx0Iv8
+[7]: https://docs.google.com/forms/d/1U1tFal2g6pwXG04eg-YPeWgBXbDwEwxBtkvxQKEEIrw/edit
