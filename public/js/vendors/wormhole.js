@@ -9450,7 +9450,6 @@ mosync.nativeui.maWidgetCreate = function(
 		processedCallback,
 		properties)
 {
-
 	callbackID = "create" + widgetID;
 	var message = ["NativeUI","maWidgetCreate", widgetType, widgetID,
 			callbackID ];
@@ -9490,6 +9489,7 @@ mosync.nativeui.maWidgetCreate = function(
  */
 mosync.nativeui.maWidgetDestroy = function(widgetID, successCallback,
 		errorCallback, processedCallback) {
+	delete mosync.nativeui.NativeElementsTable[widgetID];
 	callbackID = "destroy" + widgetID;
 	var mosyncWidgetHandle = mosync.nativeui.widgetIDList[widgetID];
 	mosync.bridge.send([ "NativeUI", "maWidgetDestroy",
@@ -10418,6 +10418,11 @@ mosync.nativeui.NativeWidgetElement = function(widgetType, widgetID, params,
 		 *
 		 */
 		this.show = function(successCallback, errorCallback) {
+			// if(mosync.nativeui.lastNativeUIScreen) {
+			// 	mosync.nativeui.maWidgetDestroy(mosync.nativeui.lastNativeUIScreen.id);
+			// }			
+			// mosync.nativeui.lastNativeUIScreen = self;
+
 			if (self.created) {
 				mosync.nativeui.maWidgetScreenShow(self.id, successCallback,
 						errorCallback, self.processedMessage);
@@ -10666,6 +10671,9 @@ mosync.nativeui.destroyAll = function()
 		// Destroy all widgets and do not wait for anything.
 		mosync.nativeui.maWidgetDestroy(widget, null, null, null);
 	}
+
+	mosync.nativeui.NativeElementsTable = {};
+
 };
 
 
@@ -10914,6 +10922,15 @@ mosync.nativeui.getNativeAttrValue = function(value) {
  * @private
  */
 mosync.nativeui.createWidget = function(widget, parent) {
+
+	var _w = document.getNativeElementById(widget.id)
+	console.log('_w:', _w);
+	if(_w) {
+		if (_w.type == 'Screen') {
+			mosync.nativeui.maWidgetDestroy(widgetID);
+		}
+	}
+
 	var widgetNode = widget;
 	var widgetID = widget.id;
 	var imageResources = null;

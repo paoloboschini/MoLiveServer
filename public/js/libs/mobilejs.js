@@ -18,10 +18,7 @@
     // console.log('html code evaluated:' + code);
 
     // reset mosync
-    mosync.nativeui.callBackTable = {};
-    mosync.nativeui.eventCallBackTable = {};
-    mosync.nativeui.numWidgetsRequested = 0;
-    window.clearInterval(mosync.nativeui.showInterval);
+    reset();
 
     document.open();
     document.write(code);
@@ -59,6 +56,8 @@
 
   socket.on('reset', function() {
     reset();
+    mosync.bridge.send(['Custom', 'restoreWebView']);
+    mosync.bridge.send(['Custom', 'restoreWebView']);
   });
 
   /**
@@ -66,8 +65,10 @@
    */
   function reset() {
     mosync.nativeui.destroyAll();
-    mosync.bridge.send(['Custom', 'restoreWebView']);
-    mosync.bridge.send(['Custom', 'restoreWebView']);
+    mosync.nativeui.callBackTable = {};
+    mosync.nativeui.eventCallBackTable = {};
+    mosync.nativeui.numWidgetsRequested = 0;
+    window.clearInterval(mosync.nativeui.showInterval);
   }
 
   //-------------------------------------------------------
