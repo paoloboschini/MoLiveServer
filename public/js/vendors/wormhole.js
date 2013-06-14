@@ -10418,11 +10418,6 @@ mosync.nativeui.NativeWidgetElement = function(widgetType, widgetID, params,
 		 *
 		 */
 		this.show = function(successCallback, errorCallback) {
-			// if(mosync.nativeui.lastNativeUIScreen) {
-			// 	mosync.nativeui.maWidgetDestroy(mosync.nativeui.lastNativeUIScreen.id);
-			// }			
-			// mosync.nativeui.lastNativeUIScreen = self;
-
 			if (self.created) {
 				mosync.nativeui.maWidgetScreenShow(self.id, successCallback,
 						errorCallback, self.processedMessage);
